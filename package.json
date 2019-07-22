@@ -1,0 +1,54 @@
+{
+  "name": "cmd-pal",
+  "version": "1.0.0",
+  "description": "React Command Palette",
+  "main": "dist/main.js",
+  "moduleTODO": "dist/index.es.js",
+  "typings": "typings/index.d.ts",
+  "author": "VinceMalone <vince.malone@namely.com>",
+  "license": "MIT",
+  "scripts": {
+    "declaration": "tsc --emitDeclarationOnly --jsx preserve --declarationDir dist --declaration src/index.ts",
+    "build": "webpack --config webpack.config.production.js",
+    "dev": "webpack-dev-server --mode=development"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "dependencies": {
+    "@types/classnames": "^2.2.8",
+    "@types/react": "^16.8.22",
+    "@types/react-dom": "^16.8.4",
+    "@types/styled-components": "^4.1.18",
+    "classnames": "^2.2.6",
+    "fuse.js": "^3.4.5",
+    "hotkeys-js": "^3.6.11",
+    "styled-components": "^4.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
+    "@types/faker": "^4.1.5",
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "@typescript-eslint/parser": "^1.11.0",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-styled-components": "^1.10.6",
+    "eslint": "^6.0.0",
+    "eslint-config-prettier": "^5.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.13.0",
+    "eslint-plugin-react-hooks": "^1.6.0",
+    "faker": "^4.1.0",
+    "prettier": "^1.18.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "style-loader": "^0.23.1",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.2",
+    "webpack": "^4.35.0",
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2",
+    "webpack-merge": "^4.2.1"
+  }
+}
