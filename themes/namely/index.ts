@@ -1,15 +1,17 @@
+import { HelpText } from './HelpText';
 import { Input } from './Input';
-import { Item } from './Item';
+import { Item as Option } from './Item'; // TODO
 import { List } from './List';
 import { Mark } from './Mark';
 import { Progress } from './Progress';
 import { Surround } from './Surround';
 
 export const components = {
+  HelpText,
   Input,
-  Item,
   List,
   Mark,
+  Option,
   Progress,
   Surround,
 };
