@@ -1,0 +1,14 @@
+{
+  "*.{json,md}": [
+    "prettier --write"
+  ],
+  "*.{js}": [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "*.{ts,tsx}": [
+    "tsc --noEmit",
+    "eslint --fix",
+    "prettier --write"
+  ]
+}

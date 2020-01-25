@@ -16,6 +16,7 @@
 - empty list UI
 - API for _styling_
 - focus-trap
+- explore _nested prompts_ again
 
 # Open Questions
 
