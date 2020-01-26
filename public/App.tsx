@@ -45,6 +45,20 @@ export const App = () => (
           }}
         />,
 
+        // <PromptCommands
+        //   commands={[
+        //     {
+        //       label: '',
+        //       // TODO: change `Choice` to use `resolve` rather than `value`
+        //       // Can be `T | Promise<T> | (() => T) | (() => Promise<T>)`
+        //       resolve: () => {},
+        //     },
+        //   ]}
+        //   itemHeight={32}
+        //   key="commands-wip"
+        //   resolve={undefined}
+        // />,
+
         <PromptSingleChoice
           choices={choices}
           itemHeight={32}
