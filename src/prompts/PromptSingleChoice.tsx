@@ -1,12 +1,7 @@
 import * as React from 'react';
 import * as tb from 'ts-toolbelt';
+import { useResolved } from 'use-resolved';
 
-import {
-  ListProvider,
-  moveFocus,
-  search,
-  useListContext,
-} from '../contexts/list';
 import { Choice, ChoiceListItem, Choices } from '../../typings/List';
 import { CmdContainer } from '../components/CmdContainer';
 import { CmdHighlighted } from '../components/CmdHighlighted';
@@ -15,11 +10,17 @@ import { CmdList } from '../components/CmdList';
 import { CmdListItem } from '../components/CmdListItem';
 import { CmdProgress } from '../components/CmdProgress';
 import { useComponents } from '../contexts/components';
+import {
+  ListProvider,
+  moveFocus,
+  search,
+  useListContext,
+} from '../contexts/list';
 import { usePaletteContext } from '../contexts/palette';
 import { usePromptContext } from '../contexts/prompt';
+import { call } from '../utils/call';
 import { useAutoFocus } from '../utils/useAutoFocus';
 import { useHotkeys } from '../utils/useHotkeys';
-import { useCalled, useResolved } from '../utils/useResolved';
 
 interface PromptProps<V, In, Out> {
   resolve(value: V, input: In): tb.M.Promisable<Out>;
@@ -47,20 +48,27 @@ export const PromptSingleChoice: PromptSingleChoiceComponent = ({
   useHotkeys('escape', onExit);
 
   const handleSelect = React.useCallback(
-    (choice: Choice) => {
-      onCommit(resolve(choice.value, value));
+    async (choice: Choice<unknown>) => {
+      // TODO: pending
+      const result = await call(choice.resolve, value);
+      onCommit(resolve(result, value));
     },
     [onCommit, resolve, value],
   );
 
-  const choicesPromise = useResolved(useCalled(choices, value), []);
+  const choicesResult = useResolved(() => call(choices, value), [
+    choices,
+    value,
+  ]);
 
-  return state.isPending || choicesPromise.pending ? (
+  return choicesResult.error ? (
+    <>uh oh...</>
+  ) : state.isPending || choicesResult.pending ? (
     <CmdContainer as={components.Surround} onOutsideClick={onExit}>
       <CmdProgress as={components.Progress} />
     </CmdContainer>
   ) : (
-    <ListProvider items={choicesPromise.result}>
+    <ListProvider items={choicesResult.value}>
       <CmdChoiceContainer
         as={components.Surround}
         onOutsideClick={onExit}

@@ -14,7 +14,7 @@ const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const choices = Array.from({ length: 2000 }, () => ({
   label: company.catchPhrase(),
-  value: random.uuid(),
+  resolve: random.uuid(),
 }));
 
 export const App = () => (
@@ -73,7 +73,7 @@ export const App = () => (
               .fill(null)
               .map((_, index) => ({
                 label: (sum * (index + 1)).toString(),
-                value: (sum * (index + 1)).toString(),
+                resolve: (sum * (index + 1)).toString(),
               }));
           }}
           itemHeight={32}

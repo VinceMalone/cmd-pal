@@ -1,17 +1,19 @@
 import * as React from 'react';
 import * as tb from 'ts-toolbelt';
+import { useResolved } from 'use-resolved';
 
+import { Functionable } from '../../typings/Functionable';
 import { CmdContainer } from '../components/CmdContainer';
 import { CmdInput } from '../components/CmdInput';
 import { CmdProgress } from '../components/CmdProgress';
 import { useComponents } from '../contexts/components';
 import { usePaletteContext } from '../contexts/palette';
 import { usePromptContext } from '../contexts/prompt';
+import { call } from '../utils/call';
 import { useAutoFocus } from '../utils/useAutoFocus';
 import { useHotkeys } from '../utils/useHotkeys';
-import { useCalled, useResolved } from '../utils/useResolved';
 
-type InitialValue<T> = string | tb.F.Function<[T], tb.M.Promisable<string>>;
+type InitialValue<T> = Functionable<tb.M.Promisable<string>, [T]>;
 
 interface PromptProps<V, In, Out> {
   resolve(value: V, input: In): tb.M.Promisable<Out>;
@@ -38,13 +40,13 @@ export const PromptText: PromptTextComponent = ({
   const { onCommit, onExit, value } = usePromptContext();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const initialValuePromise = useResolved(
-    useCalled(initialValue, value),
-    undefined,
-  );
+  const initialValueResult = useResolved(() => call(initialValue, value), [
+    initialValue,
+    value,
+  ]);
 
   useHotkeys('escape', onExit);
-  useAutoFocus(inputRef, !initialValuePromise.pending);
+  useAutoFocus(inputRef, !initialValueResult.pending);
 
   const handleKeyDown = React.useCallback(
     (evt: React.KeyboardEvent<HTMLElement>) => {
@@ -57,12 +59,12 @@ export const PromptText: PromptTextComponent = ({
 
   return (
     <CmdContainer as={components.Surround} onOutsideClick={onExit}>
-      {state.isPending || initialValuePromise.pending ? (
+      {state.isPending || initialValueResult.pending ? (
         <CmdProgress as={components.Progress} />
       ) : (
         <CmdInput
           as={components.Input}
-          defaultValue={initialValuePromise.result}
+          defaultValue={initialValueResult.value}
           label={label}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}

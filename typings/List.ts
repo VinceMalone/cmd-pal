@@ -1,5 +1,7 @@
 import * as tb from 'ts-toolbelt';
 
+import { Functionable } from './Functionable';
+
 export interface Part {
   id: string;
   isMatch: boolean;
@@ -22,14 +24,14 @@ export interface ListItem extends Item, Searchable {
 
 //
 
-export interface Choice extends Item {
-  value: string;
+export interface Choice<In> extends Item {
+  resolve: Functionable<tb.M.Promisable<string>, [In]>;
 }
 
-export interface ChoiceListItem extends Choice, ListItem {}
+export interface ChoiceListItem<In = unknown> extends Choice<In>, ListItem {}
 
-export type Choices<In> =
-  | readonly Choice[]
-  | tb.F.Function<[In], tb.M.Promisable<readonly Choice[]>>;
-
-export interface Command extends Item {}
+// TODO: maybe isn't defined here; rather in the only file it's used in
+export type Choices<In> = Functionable<
+  tb.M.Promisable<readonly Choice<In>[]>,
+  [In]
+>;
