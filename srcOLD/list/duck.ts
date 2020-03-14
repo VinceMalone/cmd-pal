@@ -1,7 +1,6 @@
-import { Item, ListItem } from '../../typings/Item';
-import { searchItems } from '../util/searchItems';
-
 import { Action } from '../ducks/types';
+import { Item, ListItem } from '../types';
+import { searchItems } from '../util/searchItems';
 
 /**
  * TODO:

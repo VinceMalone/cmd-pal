@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useCallback, useRef } from 'react';
 
-import { ListItem } from '../../typings/Item';
-
+import { ListItem } from '../types';
 import { useAutoFocus } from '../util/useAutoFocus';
-import { useHotkeys } from '../util/useHotkeys';
+import { useHotkeys } from '../util/useHotKeys';
+
 import { CmdContainer } from './CmdContainer';
 import { CmdList } from './CmdList';
 import { CmdProgress } from './CmdProgress';

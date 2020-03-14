@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-import { Prompt } from '../typings/Item';
-
 import { CmdPromptSingleChoice } from './prompts/CmdPromptSingleChoice';
 import { CmdPromptText } from './prompts/CmdPromptText';
+import { Prompt } from './types';
 
 interface SubPipe {
   name: string;

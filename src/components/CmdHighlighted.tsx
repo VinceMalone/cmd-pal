@@ -20,11 +20,11 @@ export const CmdHighlighted: React.FC<CmdHighlightedProps> = ({
   ]);
 
   return (
-    <>
+    <span>
       {parts.map(part => {
         const Part = part.isMatch ? Mark : React.Fragment;
         return <Part key={part.id}>{part.value}</Part>;
       })}
-    </>
+    </span>
   );
 };

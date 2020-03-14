@@ -1,4 +1,4 @@
-import { Item } from '../../typings/Item';
+import { Item } from '../types';
 
 import { Action } from './types';
 

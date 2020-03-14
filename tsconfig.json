@@ -2,19 +2,17 @@
   "compilerOptions": {
     "declaration": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "target": "esnext",
-    "outDir": "./dist",
-    // "rootDir": "./src",
-    "rootDirs": ["./src", "./public", "./typings"],
-
     "jsx": "react",
-    // "module": "commonjs",
+    "lib": ["dom", "esnext"],
+    "module": "esnext",
     "moduleResolution": "node",
     "sourceMap": true,
-    "strict": true
-    // "target": "es6"
-  },
-  "exclude": ["node_modules"]
-  // "include": ["src/**/*"]
+    "strict": true,
+    "target": "esnext",
+
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["*", "src/*"]
+    }
+  }
 }

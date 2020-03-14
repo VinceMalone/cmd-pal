@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Item, ListItem } from '../../../typings/List';
+import { Item, ListItem } from '../../types/List';
 
 import * as duck from './duck';
 

@@ -1,6 +1,7 @@
+import { Action } from '../../types/Action';
+import { Item, ListItem } from '../../types/List';
+import { createDomId } from '../../utils/domId';
 import { searchItems } from '../../utils/searchItems';
-import { Action } from '../../../typings/Action';
-import { Item, ListItem } from '../../../typings/List';
 
 /**
  * TODO:
@@ -33,9 +34,7 @@ const getActiveDescendant = (items: ListItem[], focusedIndex: number) =>
 
 const toSearchableItem = (item: Item): ListItem => ({
   ...item,
-  id: `cmd-item__${Math.random()
-    .toString(36)
-    .substr(2)}`,
+  id: createDomId('list-item'),
   matches: [],
 });
 
@@ -115,7 +114,8 @@ export const reducer = (state: State, action: Actions): State => {
     case ActionType.Search: {
       const searchQuery = action.payload;
       const items = searchItems(state.allItems, searchQuery);
-      const focusedIndex = 0;
+      // Don't reset the focused index if the search query didn't change the results
+      const focusedIndex = items !== state.items ? 0 : state.focusedIndex;
 
       return {
         ...state,

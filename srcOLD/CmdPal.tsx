@@ -2,14 +2,12 @@ import * as React from 'react';
 import { useCallback, useReducer, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 
-import { Command, CommandItem, Prompt } from '../typings/Item';
-
+import { CmdPiping } from './CmdPiping';
 import * as progressDuck from './ducks/progressDuck';
 import { CmdPalette } from './presentational/CmdPalette';
+import { Command, CommandItem, Prompt } from './types';
 import { ComponentsProvider } from './util/components';
 import { useList } from './util/useList';
-
-import { CmdPiping } from './CmdPiping';
 
 export interface CmdPalProps {
   commands: Command[];

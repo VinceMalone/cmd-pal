@@ -1,4 +1,4 @@
-import { ListItem } from '../../typings/Item';
+import { ListItem } from '../types';
 
 const compare = (a: string, b: string) =>
   a.toLocaleLowerCase() === b.toLocaleLowerCase();

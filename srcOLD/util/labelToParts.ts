@@ -1,4 +1,8 @@
-import { Part } from '../../typings/Item';
+interface Part {
+  id: string;
+  isMatch: boolean;
+  value: string;
+}
 
 const createPart = (value: string, isMatch: boolean, id: number): Part => ({
   id: id.toString(),

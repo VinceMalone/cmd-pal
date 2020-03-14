@@ -1,5 +1,4 @@
-import { Command, CommandItem } from '../typings/Item';
-
+import { Command, CommandItem } from './types';
 import { searchItems } from './util/searchItems';
 
 /**

@@ -3,9 +3,9 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
 import styled from 'styled-components';
 
-import { ListItem } from '../../typings';
 import { useListContext } from '../list';
 import { usePromptContext } from '../prompt';
+import { ListItem } from '../types';
 
 const List = styled.div`
   outline: none;

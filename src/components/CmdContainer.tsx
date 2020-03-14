@@ -7,6 +7,7 @@ import { useOnOutsideClick } from '../utils/useOnOutsideClick';
 const Container = styled.div`
   left: 50%;
   max-width: ${props => props.theme.maxWidth};
+  outline: none;
   position: fixed;
   top: ${props => props.theme.offsetTop};
   transform: translateX(-50%);
@@ -21,30 +22,43 @@ const Surround = styled.div`
   /* max-height: calc(100vh - ${props => props.theme.maxHeight}); */
 `;
 
+const noop = () => undefined;
+
 type ElementProps = React.HTMLAttributes<HTMLDivElement>;
 
 export interface CmdContainerProps extends ElementProps {
   as?: React.ElementType<{ children?: React.ReactNode }>;
   children?: React.ReactNode;
   container?: Element;
-  onOutsideClick(evt: UIEvent): void;
+  onOutsideClick?(evt: UIEvent): void;
 }
 
-export const CmdContainer = ({
-  as,
-  children,
-  container = document.body,
-  onOutsideClick,
-  ...props
-}: CmdContainerProps) => {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  useOnOutsideClick([containerRef], onOutsideClick);
+export const CmdContainer = React.forwardRef<
+  HTMLElement | null,
+  CmdContainerProps
+>(
+  (
+    {
+      as,
+      children,
+      container = document.body,
+      onOutsideClick = noop,
+      ...props
+    },
+    ref,
+  ) => {
+    const containerRef = React.useRef<HTMLDivElement>(null);
+    React.useImperativeHandle(ref, () => containerRef.current);
+    useOnOutsideClick([containerRef], onOutsideClick);
 
-  return createPortal(
-    // TODO: add `role`
-    <Container {...props} ref={containerRef} tabIndex={0}>
-      <Surround as={as}>{children}</Surround>
-    </Container>,
-    container,
-  );
-};
+    return createPortal(
+      // TODO: add `role`
+      <Container {...props} ref={containerRef} tabIndex={-1}>
+        <Surround as={as}>{children}</Surround>
+      </Container>,
+      container,
+    );
+  },
+);
+
+CmdContainer.displayName = 'CmdContainer';

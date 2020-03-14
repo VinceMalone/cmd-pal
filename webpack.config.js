@@ -7,8 +7,6 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
-    library: 'cmd-pal',
-    libraryTarget: 'umd', // TODO
   },
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
@@ -22,9 +20,9 @@ module.exports = {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         use: [
-          // {
-          //   loader: 'babel-loader',
-          // },
+          {
+            loader: 'babel-loader',
+          },
           {
             loader: 'ts-loader',
           },

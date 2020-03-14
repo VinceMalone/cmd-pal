@@ -1,21 +1,21 @@
-import { company, random, seed } from 'faker';
 import * as React from 'react';
 
-import { Palette } from '../src/Palette';
-import { PromptSingleChoice, PromptText } from '../src/prompts';
-import * as namely from '../themes/namely';
+import { Palette, PaletteProps } from '../src/Palette';
+import { ResolvableComponent } from '../src/types/ResolvableComponent';
+import * as vscode from '../themes/vscode';
 
 import { Directions } from './Directions';
 import { HotKey } from './HotKey';
+import * as palettes from './palettes';
 
-seed(1);
+type ThemedPaletteProps = Omit<
+  PaletteProps<readonly ResolvableComponent[]>,
+  'components' | 'theme'
+>;
 
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-const choices = Array.from({ length: 2000 }, () => ({
-  label: company.catchPhrase(),
-  resolve: random.uuid(),
-}));
+const VSCodePalette: React.FC<ThemedPaletteProps> = props => (
+  <Palette components={vscode.components} theme={vscode.theme} {...props} />
+);
 
 export const App = () => (
   <>
@@ -25,77 +25,24 @@ export const App = () => (
       <br />
       and <HotKey>Esc</HotKey> to close.
     </Directions>
-    <Palette
-      components={namely.components}
-      pipe={[
-        <PromptText
-          key="async1"
-          label="async1"
-          resolve={async value => {
-            await wait(1000);
-            return value;
-          }}
-        />,
-        <PromptText
-          key="async2"
-          label="async2"
-          resolve={async value => {
-            await wait(1000);
-            return value;
-          }}
-        />,
 
-        // <PromptCommands
-        //   commands={[
-        //     {
-        //       label: '',
-        //       // TODO: change `Choice` to use `resolve` rather than `value`
-        //       // Can be `T | Promise<T> | (() => T) | (() => Promise<T>)`
-        //       resolve: () => {},
-        //     },
-        //   ]}
-        //   itemHeight={32}
-        //   key="commands-wip"
-        //   resolve={undefined}
-        // />,
+    <button id="btn-before" style={{ position: 'fixed', left: '0', top: '0' }}>
+      before
+    </button>
 
-        <PromptSingleChoice
-          choices={choices}
-          itemHeight={32}
-          key="1"
-          resolve={value => value}
-        />,
-        <PromptText<string, number>
-          initialValue={async value => {
-            await wait(1000);
-            return value;
-          }}
-          key="2"
-          label="TODO"
-          placeholder="gimme a number"
-          resolve={value => Number(value)}
-        />,
-        <PromptText<number, number>
-          key="3"
-          label="TODO"
-          resolve={(value, sum) => sum + Number(value)}
-        />,
-        <PromptSingleChoice<number, number>
-          choices={async sum => {
-            await wait(1000);
-            return Array(10)
-              .fill(null)
-              .map((_, index) => ({
-                label: (sum * (index + 1)).toString(),
-                resolve: (sum * (index + 1)).toString(),
-              }));
-          }}
-          itemHeight={32}
-          key="4"
-          resolve={(value, sum) => sum + Number(value)}
-        />,
-      ]}
-      theme={namely.theme}
-    />
+    <VSCodePalette openOn="option+shift+6" prompt={palettes.list} />
+    <VSCodePalette openOn="option+shift+5" prompt={palettes.confirm} />
+    <VSCodePalette openOn="option+shift+4" prompt={palettes.multi} />
+    <VSCodePalette openOn="option+shift+3" prompt={palettes.state} />
+    <VSCodePalette openOn="option+shift+2" prompt={palettes.todo} />
+    <VSCodePalette openOn="option+shift+1" prompt={palettes.commands} />
+    <VSCodePalette openOn="option+shift+p" prompt={palettes.workflow} />
+
+    <button
+      id="btn-after"
+      style={{ position: 'fixed', right: '0', bottom: '0' }}
+    >
+      after
+    </button>
   </>
 );

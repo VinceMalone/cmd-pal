@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { useWindowSize } from 'react-use';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
 import styled from 'styled-components';
 
-import { ListItem } from '../../typings/List';
+import { ListItem } from '../types/List';
 
 const List = styled.div`
   outline: none;
@@ -14,7 +15,10 @@ const List = styled.div`
 
 export interface CmdListProps<T extends ListItem> {
   activeDescendant: string | undefined;
-  as?: React.ComponentType<{ role?: string; tabIndex?: number }>;
+  as?: React.ComponentType<{
+    role?: string;
+    // tabIndex?: number; // TODO: needed? (see JSX)
+  }>;
   children: (props: {
     focused: boolean;
     item: T;
@@ -55,23 +59,17 @@ export const CmdList: CmdListComponent = ({
     [items, onSelect],
   );
 
-  // TODO: 66 is the computed height of everything but the list
-  // TODO: this should update on window resize
-  const maxHeight = window.innerHeight - 64 - 66;
-
-  const listHeight = React.useMemo(
-    () => Math.min(maxHeight, items.length * itemHeight),
-    [itemHeight, items.length, maxHeight],
-  );
-
-  // TODO: empty list
+  const windowSize = useWindowSize();
+  let maxHeight = windowSize.height / 2;
+  maxHeight = maxHeight - (maxHeight % (itemHeight || 1));
+  const listHeight = Math.min(maxHeight, items.length * itemHeight);
 
   return (
     <List
       aria-activedescendant={activeDescendant}
       as={as}
       role="tree"
-      tabIndex={0}
+      // tabIndex={-1} // TODO: why? because of auto-focus? That's not a problem...
     >
       <AutoSizer disableHeight>
         {({ width }) => (

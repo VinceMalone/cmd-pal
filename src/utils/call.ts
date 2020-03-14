@@ -1,4 +1,4 @@
-import { Functionable } from '../../typings/Functionable';
+import { Functionable } from '../types/Functionable';
 
 export const call = <T, A extends unknown[]>(
   input: Functionable<T, A>,

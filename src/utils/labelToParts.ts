@@ -1,4 +1,4 @@
-import { Part } from '../../typings/List';
+import { Part } from '../types/List';
 
 const createPart = (value: string, isMatch: boolean, id: number): Part => ({
   id: id.toString(),

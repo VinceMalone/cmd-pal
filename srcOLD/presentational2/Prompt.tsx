@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { moveFocus, reset, useListContext } from '../list';
 import { usePromptContext } from '../prompt';
-import { useHotkeys } from '../util/useHotkeys';
+import { useHotkeys } from '../util/useHotKeys';
 import { useOnOutsideClick } from '../util/useOnOutsideClick';
 
 const Container = styled.div`

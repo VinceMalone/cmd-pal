@@ -6,8 +6,17 @@ interface Components {
   Input?: React.ComponentType;
   List?: React.ComponentType;
   Mark?: React.ComponentType;
+  Message?: React.ComponentType;
   Option?: React.ComponentType;
   Progress?: React.ComponentType;
+  Token?: React.ComponentType<
+    // TODO: share this
+    React.ButtonHTMLAttributes<HTMLButtonElement> & {
+      'aria-label': string;
+      focused: boolean;
+    }
+  >;
+  TokenGroup?: React.ComponentType;
 }
 
 export const Context = React.createContext<Components>({
@@ -18,6 +27,8 @@ export const Context = React.createContext<Components>({
   Mark: undefined,
   Option: undefined,
   Progress: undefined,
+  Token: undefined,
+  TokenGroup: undefined,
 });
 
 export const useComponents = () => React.useContext(Context);

@@ -4,9 +4,9 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
 import styled from 'styled-components';
 
-import { ListItem } from '../../typings/Item';
-
+import { ListItem } from '../types';
 import { useComponents } from '../util/components';
+
 import { CmdHelpText } from './CmdHelpText';
 import { CmdOption } from './CmdOption';
 

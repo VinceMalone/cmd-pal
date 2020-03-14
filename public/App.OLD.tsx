@@ -2,8 +2,8 @@ import { random, seed } from 'faker';
 import * as React from 'react';
 
 import { CmdPal } from '../srcOLD';
+import { Command } from '../srcOLD/types';
 import * as namely from '../themes/namely';
-import { Command } from '../typings/Item';
 
 import { Directions } from './Directions';
 import { HotKey } from './HotKey';

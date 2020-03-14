@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useCallback, useRef, useState } from 'react';
 
-import { useAutoFocus } from '../util/useAutoFocus';
-import { useHotkeys } from '../util/useHotkeys';
 import { CmdContainer } from '../presentational/CmdContainer';
 import { CmdHelpText } from '../presentational/CmdHelpText';
 import { CmdInput } from '../presentational/CmdInput';
+import { useAutoFocus } from '../util/useAutoFocus';
+import { useHotkeys } from '../util/useHotKeys';
 
 export interface CmdPromptTextProps {
   message?: string;

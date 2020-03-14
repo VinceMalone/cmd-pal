@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { useCallback, useRef } from 'react';
 
-import { Option } from '../../typings/Item';
-
-import { useAutoFocus } from '../util/useAutoFocus';
-import { useHotkeys } from '../util/useHotkeys';
-import { useList } from '../util/useList';
 import { CmdContainer } from '../presentational/CmdContainer';
 import { CmdHelpText } from '../presentational/CmdHelpText';
 import { CmdList } from '../presentational/CmdList';
 import { CmdSearch } from '../presentational/CmdSearch';
+import { Option } from '../types';
+import { useAutoFocus } from '../util/useAutoFocus';
+import { useHotkeys } from '../util/useHotKeys';
+import { useList } from '../util/useList';
 
 export interface CmdPromptSingleChoiceProps {
   choices: Option[];

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer } from 'react';
 
-import { Item } from '../../typings/Item';
 import reducer, * as duck from '../ducks/listDuck';
+import { Item } from '../types';
 
 export const useList = (list: Item[]) => {
   const [state, dispatch] = useReducer(reducer, duck.initialState);
