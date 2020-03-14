@@ -1,1 +1,0 @@
-export { CmdPal } from './CmdPal';
