@@ -14,6 +14,6 @@ export const PromptMessage: React.FC<PromptMessageProps> = ({
   children,
 }) => {
   const components = useComponents();
-  const Message = as ?? components.Message ?? 'p';
+  const Message = as ?? components.Message ?? 'div';
   return <Message>{children}</Message>;
 };

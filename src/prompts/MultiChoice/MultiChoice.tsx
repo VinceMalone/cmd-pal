@@ -22,6 +22,7 @@ import {
 } from './MultiChoicePromptContainer';
 import { MultiChoicePromptList } from './MultiChoicePromptList';
 import { MultiChoicePromptSearch } from './MultiChoicePromptSearch';
+import { NoteContainer, Note } from './Note';
 import { MultiChoicePromptContextProvider } from './context';
 
 const identity = <I, O>(x: I): O => (x as unknown) as O;
@@ -96,7 +97,19 @@ export const MultiChoice: MultiChoiceComponent = <V, In, Out>({
               {results.render ?? (
                 <>
                   {results.message && (
-                    <PromptMessage>{results.message}</PromptMessage>
+                    <PromptMessage>
+                      {/* TODO: this <Note> shit */}
+                      <NoteContainer>
+                        {results.message}
+                        <Note>
+                          (
+                          <span title="Shift + Return">
+                            <code>⇧</code> + <code>⏎</code>
+                          </span>{' '}
+                          to submit)
+                        </Note>
+                      </NoteContainer>
+                    </PromptMessage>
                   )}
                   <CmdTokenGroup as={components.TokenGroup}>
                     <DismissibleTokens as={components.Token} />

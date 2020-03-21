@@ -1,5 +1,3 @@
-// require('../themes/vscode');
-
 module.exports = {
   addons: ['@storybook/preset-typescript', '@storybook/addon-docs'],
   stories: ['../src/**/*.stories.(tsx|mdx)'],

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Directions = styled.p`
-  font-family: sans-serif;
+  font-family: 'Helvetica Neue', sans-serif;
   font-size: 16px;
   line-height: 1.5;
   margin: 48px auto;

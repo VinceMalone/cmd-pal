@@ -16,11 +16,6 @@ export const PromptProgress: React.FC<PromptProgressProps> = ({
   children = 'Loading...',
 }) => {
   const components = useComponents();
-  // const Progress = as ?? components.Progress ?? 'div'; // TODO: undo
-  const Progress = as || components.Progress || 'div';
+  const Progress = as ?? components.Progress ?? 'div';
   return <Progress>{children}</Progress>;
 };
-
-// PromptProgress.defaultProps = {
-//   children: 'Loading...',
-// };
