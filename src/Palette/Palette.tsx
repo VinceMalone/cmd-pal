@@ -9,11 +9,18 @@ import { Prompt } from './Prompt';
 import { PaletteContext } from './context';
 import * as duck from './duck';
 
+const defaultTheme = {
+  maxWidth: '37.5rem',
+  offsetTop: '2rem',
+  offsetSides: '2rem',
+  zIndex: 999999,
+};
+
 export interface PaletteProps<T extends tb.L.List<ResolvableComponent>> {
-  components: any; // TODO
+  components?: any; // TODO
   openOn: string;
   prompt: PromptPipe<T>;
-  theme: any; // TODO
+  theme?: any; // TODO
 }
 
 interface PaletteComponent {
@@ -27,7 +34,7 @@ export const Palette: PaletteComponent = ({
   components,
   openOn,
   prompt,
-  theme,
+  theme = defaultTheme,
 }) => {
   const [state, dispatch] = React.useReducer(duck.reducer, prompt, duck.init);
   const context = React.useMemo(() => ({ dispatch, state }), [state]);

@@ -13,11 +13,12 @@ interface AsProps extends ButtonProps {
 }
 
 const TokenContainer = styled.div`
-  display: flex;
+  display: inline-flex;
+  padding: var(--cmd-pal--token-gap);
 `;
 
 const TokenButton = styled.button<AsProps>`
-  outline: ${props => (props.focused ? '2px solid currentColor' : 'none')};
+  outline: ${props => (props.focused ? 'black dotted 1px' : 'none')};
 `;
 
 const DefaultTokenButton: React.FC<AsProps> = ({ children, ...props }) => {

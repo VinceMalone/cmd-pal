@@ -1,22 +1,24 @@
 import * as React from 'react';
 
 import { CmdContainer, CmdContainerProps } from '../../components/CmdContainer';
+import { useComponents } from '../../contexts/components';
 import { usePromptContext } from '../../contexts/prompt';
 import { useAutoFocus } from '../../utils/useAutoFocus';
 
 import { useConfirmPromptContext } from './context';
 
-export interface ConfirmContainerProps {
+export interface ConfirmPromptContainerProps {
   as?: CmdContainerProps['as'];
   children?: React.ReactNode;
   onKeyDown?(evt: React.KeyboardEvent<HTMLElement>): void;
 }
 
-export const ConfirmContainer: React.FC<ConfirmContainerProps> = ({
-  as,
+export const ConfirmPromptContainer: React.FC<ConfirmPromptContainerProps> = ({
+  as: As,
   children,
   onKeyDown,
 }) => {
+  const { Surround } = useComponents();
   const { onExit } = usePromptContext();
 
   const containerRef = React.useRef<HTMLElement>(null);
@@ -39,7 +41,7 @@ export const ConfirmContainer: React.FC<ConfirmContainerProps> = ({
 
   return (
     <CmdContainer
-      as={as}
+      as={As ?? Surround}
       onKeyDown={handleKeyDown}
       onOutsideClick={onExit}
       ref={containerRef}
@@ -49,12 +51,12 @@ export const ConfirmContainer: React.FC<ConfirmContainerProps> = ({
   );
 };
 
-export interface ConfirmContainerReadyProps {
-  as?: ConfirmContainerProps['as'];
+export interface ConfirmPromptContainerReadyProps {
+  as?: ConfirmPromptContainerProps['as'];
   children?: React.ReactNode;
 }
 
-export const ConfirmContainerReady: React.FC<ConfirmContainerReadyProps> = ({
+export const ConfirmPromptContainerReady: React.FC<ConfirmPromptContainerReadyProps> = ({
   as,
   children,
 }) => {
@@ -92,8 +94,8 @@ export const ConfirmContainerReady: React.FC<ConfirmContainerReadyProps> = ({
   );
 
   return (
-    <ConfirmContainer as={as} onKeyDown={handleKeyDown}>
+    <ConfirmPromptContainer as={as} onKeyDown={handleKeyDown}>
       {children}
-    </ConfirmContainer>
+    </ConfirmPromptContainer>
   );
 };

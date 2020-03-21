@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
+import { accent3 } from './colors';
+
 export const Mark = styled.mark`
   background-color: transparent;
-  color: black;
-  font-weight: 600;
+  color: ${accent3};
+  font-weight: bolder;
 `;

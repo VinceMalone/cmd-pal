@@ -1,5 +1,6 @@
 import { Action } from '../../types/Action';
 import { Token } from '../../types/Token';
+import { circularClamp } from '../../utils/circularClamp';
 
 enum ActionType {
   Add = 'ADD',
@@ -24,6 +25,15 @@ export type Actions =
   | RemoveAtOffsetAction
   | ToggleAction
   | UnfocusAction;
+
+const removeAt = <T>(arr: readonly T[], index: number): T[] => {
+  const result = [...arr];
+  result.splice(index, 1);
+  return result;
+};
+
+const wrapIndex = (index: number, length: number) =>
+  circularClamp(index, -1, length);
 
 export interface State {
   focusedIndex: number;
@@ -65,27 +75,6 @@ export const toggle = (token: Token): ToggleAction => ({
 export const unfocus = (): UnfocusAction => ({
   type: ActionType.Unfocus,
 });
-
-const removeAt = <T>(arr: readonly T[], index: number): T[] => {
-  const result = [...arr];
-  result.splice(index, 1);
-  return result;
-};
-
-// const cyclicalClamp = (n: number, min: number, max: number): number =>
-//   n < min ? max : n > max || max === -1 ? min : n % (max + 1);
-
-const circularClamp = (n: number, min: number, max: number): number => {
-  const offset = min >= 0 ? 0 : Math.abs(min);
-  return offset === 0
-    ? n >= min
-      ? n % max
-      : ((n % max) + max) % max
-    : circularClamp(n + offset, min + offset, max + offset) - offset;
-};
-
-const wrapIndex = (index: number, length: number) =>
-  circularClamp(index, -1, length);
 
 export const reducer = (state: State, action: Actions): State => {
   switch (action.type) {

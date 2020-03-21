@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 
-import { fontFamily } from './constants';
+import { accent2 } from './colors';
+import { body, dark } from './typography';
 
 const layout = css`
   align-items: center;
@@ -9,14 +10,14 @@ const layout = css`
 `;
 
 export const TokenGroup = styled.div`
+  ${body}
+  ${dark}
   ${layout} /* NOTE: keeping this off, to test that inline-block works */
-  --gap: 0.25em;
+  --cmd-pal--token-gap: 0.25em;
   background-color: white;
   box-sizing: border-box;
-  color: rgb(89, 89, 89);
-  font-family: ${fontFamily};
-  /* font-size: 16px; */
-  margin-bottom: 0.5em;
-  /* TODO: maybe move '1.5(em)' to constants? */
-  min-height: calc(var(--gap) * 4 + 1.5em);
+  margin: 0.25em;
+  min-height: calc(var(--cmd-pal--token-gap) * 4 + 1.5em);
+  outline: ${accent2} solid 1px;
+  outline-offset: -1px;
 `;

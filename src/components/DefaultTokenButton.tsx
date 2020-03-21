@@ -10,7 +10,7 @@ const TokenContainer = styled.div`
 `;
 
 const TokenButton = styled.button<DefaultTokenButtonProps>`
-  outline: ${props => (props.focused ? '2px solid currentColor' : 'none')};
+  outline: ${props => (props.focused ? 'black dotted 1px' : 'none')};
 `;
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;

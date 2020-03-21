@@ -7,13 +7,15 @@ import { useDomId } from '../utils/domId';
 import { CmdList } from './CmdList';
 import { Measure } from './Measure';
 
+export interface RenderItemProps {
+  focused: boolean;
+  item: ChoiceListItem;
+  onSelect(id: string): void;
+}
+
 export interface ChoiceMenuListProps {
   as?: React.ComponentType<{}>;
-  children: (props: {
-    focused: boolean;
-    item: ChoiceListItem;
-    onSelect(id: string): void;
-  }) => React.ReactElement;
+  children: (props: RenderItemProps) => React.ReactElement;
   emptyLabel?: string;
   onSelect(item: ChoiceListItem, index: number): void;
 }

@@ -1,6 +1,12 @@
 import * as React from 'react';
 
 import { Palette, PaletteProps } from '../src/Palette';
+// TODO: ensures the [base] prompt styles are imported before theme styles
+import '../src/prompts/Confirm';
+import '../src/prompts/List';
+import '../src/prompts/MultiChoice';
+import '../src/prompts/SingleChoice';
+import '../src/prompts/Text';
 import { ResolvableComponent } from '../src/types/ResolvableComponent';
 import * as vscode from '../themes/vscode';
 
@@ -26,10 +32,6 @@ export const App = () => (
       and <HotKey>Esc</HotKey> to close.
     </Directions>
 
-    <button id="btn-before" style={{ position: 'fixed', left: '0', top: '0' }}>
-      before
-    </button>
-
     <VSCodePalette openOn="option+shift+6" prompt={palettes.list} />
     <VSCodePalette openOn="option+shift+5" prompt={palettes.confirm} />
     <VSCodePalette openOn="option+shift+4" prompt={palettes.multi} />
@@ -37,12 +39,5 @@ export const App = () => (
     <VSCodePalette openOn="option+shift+2" prompt={palettes.todo} />
     <VSCodePalette openOn="option+shift+1" prompt={palettes.commands} />
     <VSCodePalette openOn="option+shift+p" prompt={palettes.workflow} />
-
-    <button
-      id="btn-after"
-      style={{ position: 'fixed', right: '0', bottom: '0' }}
-    >
-      after
-    </button>
   </>
 );

@@ -2,22 +2,14 @@ import * as React from 'react';
 import { useWindowSize } from 'react-use';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
-import styled from 'styled-components';
 
 import { ListItem } from '../types/List';
-
-const List = styled.div`
-  outline: none;
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: relative;
-`;
 
 export interface CmdListProps<T extends ListItem> {
   activeDescendant: string | undefined;
   as?: React.ComponentType<{
+    'aria-activedescendant'?: string;
     role?: string;
-    // tabIndex?: number; // TODO: needed? (see JSX)
   }>;
   children: (props: {
     focused: boolean;
@@ -36,7 +28,7 @@ interface CmdListComponent {
 
 export const CmdList: CmdListComponent = ({
   activeDescendant,
-  as,
+  as: List = 'div',
   children,
   focusedIndex,
   itemHeight,
@@ -65,12 +57,7 @@ export const CmdList: CmdListComponent = ({
   const listHeight = Math.min(maxHeight, items.length * itemHeight);
 
   return (
-    <List
-      aria-activedescendant={activeDescendant}
-      as={as}
-      role="tree"
-      // tabIndex={-1} // TODO: why? because of auto-focus? That's not a problem...
-    >
+    <List aria-activedescendant={activeDescendant} role="tree">
       <AutoSizer disableHeight>
         {({ width }) => (
           <FixedSizeList

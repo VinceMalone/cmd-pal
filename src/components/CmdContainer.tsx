@@ -5,22 +5,48 @@ import styled from 'styled-components';
 import { useOnOutsideClick } from '../utils/useOnOutsideClick';
 
 const Container = styled.div`
-  left: 50%;
+  box-sizing: border-box;
+  left: 0;
+  margin: auto;
   max-width: ${props => props.theme.maxWidth};
   outline: none;
   position: fixed;
+  right: 0;
   top: ${props => props.theme.offsetTop};
-  transform: translateX(-50%);
   width: calc(100% - ${props => props.theme.offsetSides});
   z-index: ${props => props.theme.zIndex};
 `;
 
+// TODO: dis good?
+Container.defaultProps = {
+  theme: {
+    maxWidth: '600px',
+    offsetSides: '2rem',
+    offsetTop: '2rem',
+    zIndex: 1,
+  },
+};
+
 const Surround = styled.div`
-  display: flex;
-  flex-direction: column;
+  /* display: flex; */
+  /* flex-direction: column; */
+
   /* TODO: can't use because of list virtualization */
   /* max-height: calc(100vh - ${props => props.theme.maxHeight}); */
+
+  background-color: white;
+  border: solid;
+  color: black;
+  font-family: sans-serif;
+  line-height: 1.25;
+  padding: 0.5em 1em;
 `;
+
+// const Dialog = React.forwardRef<
+//   HTMLDialogElement,
+//   React.DialogHTMLAttributes<HTMLDialogElement>
+// >((props, ref) => <dialog {...props} open ref={ref} />);
+// Dialog.displayName = 'Dialog';
 
 const noop = () => undefined;
 
@@ -51,13 +77,22 @@ export const CmdContainer = React.forwardRef<
     React.useImperativeHandle(ref, () => containerRef.current);
     useOnOutsideClick([containerRef], onOutsideClick);
 
-    return createPortal(
-      // TODO: add `role`
+    return (
       <Container {...props} ref={containerRef} tabIndex={-1}>
         <Surround as={as}>{children}</Surround>
-      </Container>,
-      container,
+      </Container>
     );
+
+    // // TODO: temp remove debug
+    // container = document.getElementById('cmd-pal-root') ?? container;
+
+    // return createPortal(
+    //   // TODO: add `role`
+    //   <Container {...props} ref={containerRef} tabIndex={-1}>
+    //     <Surround as={as}>{children}</Surround>
+    //   </Container>,
+    //   container,
+    // );
   },
 );
 

@@ -8,6 +8,7 @@ import { Progress } from './Progress';
 import { Surround } from './Surround';
 import { Token } from './Token';
 import { TokenGroup } from './TokenGroup';
+import { TokenInput } from './TokenInput';
 
 export const components = {
   HelpText,
@@ -20,6 +21,7 @@ export const components = {
   Surround,
   Token,
   TokenGroup,
+  TokenInput,
 };
 
 export const theme = {

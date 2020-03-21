@@ -1,5 +1,9 @@
 import * as React from 'react';
 
+// TODO: deprecated -- remove
+
+//
+
 // type ElementProps = React.HTMLAttributes<HTMLDivElement>;
 
 // export interface CmdMessageProps extends ElementProps {

@@ -1,45 +1,33 @@
 import * as React from 'react';
-import { Result } from 'use-resolved';
 
-import { CmdMessage } from '../../components/CmdMessage';
-import { CmdProgress } from '../../components/CmdProgress';
+import { CmdTokenGroup } from '../../components/CmdTokenGroup';
+import { DismissibleTokens } from '../../components/DismissibleTokens';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { PromptMessage } from '../../components/PromptMessage';
+import { PromptProgress } from '../../components/PromptProgress';
+import { Resolvables } from '../../components/Resolvables';
 import { useComponents } from '../../contexts/components';
-import { usePaletteContext } from '../../contexts/palette';
 import { usePromptContext } from '../../contexts/prompt';
 import { PromptProps } from '../../types/PromptProps';
 import { Resolvable } from '../../types/Resolvable';
 import { call } from '../../utils/call';
-import { useResult } from '../../utils/useResult';
 
 import {
   ListPromptContainer,
-  ListPromptContainerReady,
+  ListPromptContainerProps,
 } from './ListPromptContainer';
 import { ListPromptTextInput } from './ListPromptTextInput';
-import { ListPromptTokens } from './ListPromptTokens';
 import { ListPromptContextProvider } from './context';
-
-const combineResults = <T extends Record<string, unknown>>(
-  results: { [P in keyof T]: Result<T[P]> },
-) => {
-  const entries = Object.entries(results);
-
-  return {
-    error: entries.find(([, x]) => x.error)?.[1]?.error,
-    pending: entries.some(([, x]) => x.pending),
-    values: Object.fromEntries(entries.map(([k, v]) => [k, v.value])) as T,
-  };
-};
 
 const identity = <I, O>(x: I): O => (x as unknown) as O;
 
 export interface ListProps<In, Out> extends PromptProps<string[], In, Out> {
-  as?: React.ComponentType<{}>;
+  as?: ListPromptContainerProps['as'];
   initialValue?: Resolvable<readonly string[], [In]>;
   message?: Resolvable<string, [In]>;
   render?: Resolvable<React.ReactNode, [In]>;
-  renderError?: ((error: Error) => React.ReactNode) | React.ReactNode;
-  renderProgress?: React.ReactNode;
+  renderError?(error: Error): React.ReactNode;
+  renderProgress?(): React.ReactNode;
 }
 
 interface ListComponent {
@@ -47,7 +35,7 @@ interface ListComponent {
 }
 
 export const List: ListComponent = ({
-  as: As,
+  as,
   initialValue,
   message,
   render,
@@ -56,16 +44,7 @@ export const List: ListComponent = ({
   resolve = identity,
 }) => {
   const components = useComponents();
-  const { state } = usePaletteContext();
   const { onCommit, value } = usePromptContext();
-
-  const { error, pending, values } = combineResults({
-    initialValue: useResult(initialValue, value),
-    message: useResult(message, value),
-    render: useResult(render, value),
-  });
-
-  const isPending = state.isPending || pending;
 
   const handleSubmit = React.useCallback(
     (list: string[]) => {
@@ -76,40 +55,49 @@ export const List: ListComponent = ({
   );
 
   return (
-    <>
-      {error ? (
-        <ListPromptContainer as={As ?? components.Surround}>
-          {// (() => { throw new Error(error); })()
-          typeof renderError === 'function'
-            ? renderError(error)
-            : renderError ?? (
-                <CmdMessage as={components.Message}>{error.message}</CmdMessage>
-              )}
+    <ErrorBoundary
+      fallback={error => (
+        <ListPromptContainer as={as}>
+          {renderError?.(error) ?? (
+            <PromptMessage>{error.message}</PromptMessage>
+          )}
         </ListPromptContainer>
-      ) : isPending ? (
-        <ListPromptContainer as={As ?? components.Surround}>
-          {renderProgress ?? <CmdProgress as={components.Progress} />}
-        </ListPromptContainer>
-      ) : (
-        <ListPromptContextProvider
-          initialValue={values.initialValue}
-          onSubmit={handleSubmit}
-        >
-          <ListPromptContainerReady as={As ?? components.Surround}>
-            {values.render ?? (
-              <>
-                {values.message && (
-                  <CmdMessage as={components.Message}>
-                    {values.message}
-                  </CmdMessage>
-                )}
-                <ListPromptTokens />
-                <ListPromptTextInput />
-              </>
-            )}
-          </ListPromptContainerReady>
-        </ListPromptContextProvider>
       )}
-    </>
+    >
+      <Resolvables
+        fallback={() => (
+          <ListPromptContainer as={as}>
+            {renderProgress?.() ?? <PromptProgress />}
+          </ListPromptContainer>
+        )}
+        input={value}
+        resolvables={{
+          initialValue,
+          message,
+          render,
+        }}
+      >
+        {results => (
+          <ListPromptContextProvider
+            initialValue={results.initialValue}
+            onSubmit={handleSubmit}
+          >
+            <ListPromptContainer as={as}>
+              {render ?? (
+                <>
+                  {results.message && (
+                    <PromptMessage>{results.message}</PromptMessage>
+                  )}
+                  <CmdTokenGroup as={components.TokenGroup}>
+                    <DismissibleTokens as={components.Token} />
+                    <ListPromptTextInput />
+                  </CmdTokenGroup>
+                </>
+              )}
+            </ListPromptContainer>
+          </ListPromptContextProvider>
+        )}
+      </Resolvables>
+    </ErrorBoundary>
   );
 };

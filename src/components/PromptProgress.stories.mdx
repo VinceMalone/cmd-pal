@@ -1,0 +1,29 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+
+import { PromptProgress } from './PromptProgress';
+
+<Meta title="PromptProgress" component={PromptProgress} />
+
+# PromptProgress
+
+Used to display indeterminate progress to the user.
+
+<Preview>
+  <Story name="Without Children">
+    <PromptProgress />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="With Children">
+    <PromptProgress>
+      <Fancy>Custom Loading Text</Fancy>
+    </PromptProgress>
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="As <Fancy> Component">
+    <PromptProgress as={Fancy} />
+  </Story>
+</Preview>

@@ -4,25 +4,25 @@ import styled from 'styled-components';
 import { useDomId } from '../../src/utils/domId';
 
 import { DismissButton } from './DismissButton';
-import { fontFamily } from './constants';
+import { body, dark } from './typography';
 
 const height = 1.5;
 const vSpace = 6 / 16;
 
 const Container = styled.div`
+  ${body}
+  ${dark}
   align-items: center;
   background-color: rgb(224, 224, 224);
   border-radius: 0.1875em;
-  color: rgb(71, 71, 71);
   display: inline-flex;
-  font-family: ${fontFamily};
-  font-size: 16px;
-  font-weight: 400;
   line-height: ${height - vSpace}em;
+  margin: var(--cmd-pal--token-gap);
 `;
 
 const Label = styled.div`
   padding: ${vSpace / 2}em 0.375em;
+  white-space: pre-wrap;
 `;
 
 const TokenDismissButton = styled(DismissButton)<{ focused: boolean }>`

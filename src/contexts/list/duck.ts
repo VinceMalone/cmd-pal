@@ -1,5 +1,6 @@
 import { Action } from '../../types/Action';
 import { Item, ListItem } from '../../types/List';
+import { circularClamp } from '../../utils/circularClamp';
 import { createDomId } from '../../utils/domId';
 import { searchItems } from '../../utils/searchItems';
 
@@ -37,6 +38,9 @@ const toSearchableItem = (item: Item): ListItem => ({
   id: createDomId('list-item'),
   matches: [],
 });
+
+const wrapIndex = (index: number, length: number) =>
+  circularClamp(index, 0, length);
 
 export interface State<T extends ListItem = ListItem> {
   activeDescendant: string | undefined;
@@ -86,9 +90,10 @@ export const setItems = (items: Item[]): SetItemsAction => ({
 export const reducer = (state: State, action: Actions): State => {
   switch (action.type) {
     case ActionType.MoveFocus: {
-      const size = state.items.length;
-      const next = state.focusedIndex + action.payload;
-      const focusedIndex = next < 0 ? size - 1 : next % size;
+      const focusedIndex = wrapIndex(
+        state.focusedIndex + action.payload,
+        state.items.length,
+      );
       const activeDescendant = getActiveDescendant(state.items, focusedIndex);
 
       return {

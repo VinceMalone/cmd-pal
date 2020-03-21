@@ -2,15 +2,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 const Group = styled.div`
-  --gap: 0.25em;
-  padding: var(--gap);
-`;
-
-const GroupItem = styled.div`
-  box-sizing: border-box;
-  display: inline-block;
-  max-width: 100%;
-  padding: var(--gap);
+  --cmd-pal--token-gap: 0.1em;
+  padding: var(--cmd-pal--token-gap);
+  margin: calc(var(--cmd-pal--token-gap) * -2);
 `;
 
 export interface CmdTokenGroupProps {
@@ -21,10 +15,4 @@ export interface CmdTokenGroupProps {
 export const CmdTokenGroup: React.FC<CmdTokenGroupProps> = ({
   as,
   children,
-}) => (
-  <Group as={as}>
-    {React.Children.map(children, child => (
-      <GroupItem>{child}</GroupItem>
-    ))}
-  </Group>
-);
+}) => <Group as={as}>{children}</Group>;

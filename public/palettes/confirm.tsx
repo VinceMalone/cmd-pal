@@ -117,7 +117,7 @@ export const confirm = [
       await wait(400);
       throw new Error('Uh oh');
     }}
-    renderProgress={<Progress>... ... ... ...</Progress>}
+    renderProgress={() => <Progress>... ... ... ...</Progress>}
     resolve={value => {
       console.log('#5', value);
     }}

@@ -17,7 +17,10 @@ interface Components {
     }
   >;
   TokenGroup?: React.ComponentType;
+  TokenInput?: React.ComponentType;
 }
+
+const defaults: Components = {};
 
 export const Context = React.createContext<Components>({
   Surround: undefined,
@@ -29,13 +32,14 @@ export const Context = React.createContext<Components>({
   Progress: undefined,
   Token: undefined,
   TokenGroup: undefined,
+  TokenInput: undefined,
 });
 
 export const useComponents = () => React.useContext(Context);
 
 export const ComponentsProvider = ({
   children,
-  components,
+  components = defaults,
 }: {
   children: React.ReactNode;
   components: Components;

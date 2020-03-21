@@ -1,25 +1,26 @@
 import styled from 'styled-components';
 
+import { accent2 } from './colors';
+import { body, dark } from './typography';
+
+const outsideSpacing = 0.25;
+
 export const Input = styled.input`
+  ${body}
+  ${dark}
   background-color: white;
   border: none;
-  color: rgb(97, 97, 97);
-  font-size: 13px;
-  /* line-height: 1.375; */
-  /* padding: 0.3125rem 0.5rem; */
-  padding: 4px;
-
-  margin: 6px;
-  width: calc(100% - 12px);
+  height: 2em;
+  margin: ${outsideSpacing}em;
+  padding: 0 0.5em;
+  width: calc(100% - ${outsideSpacing * 2}em);
 
   ::placeholder {
-    color: #767676;
+    color: rgba(0, 0, 0, 0.54);
   }
 
   :focus {
-    outline-color: rgba(0, 122, 204, 0.4);
+    outline: ${accent2} solid 1px;
     outline-offset: -1px;
-    outline-style: solid;
-    outline-width: 1px;
   }
 `;

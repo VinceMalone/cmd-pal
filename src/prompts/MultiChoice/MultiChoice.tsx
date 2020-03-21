@@ -1,107 +1,131 @@
 import * as React from 'react';
-import { useResolved } from 'use-resolved';
 
-import { CmdContainer } from '../../components/CmdContainer';
-import { CmdMessage } from '../../components/CmdMessage';
-import { CmdProgress } from '../../components/CmdProgress';
+import { CmdHighlighted } from '../../components/CmdHighlighted';
+import { CmdListItem } from '../../components/CmdListItem';
+import { CmdTokenGroup } from '../../components/CmdTokenGroup';
+import { DismissibleTokens } from '../../components/DismissibleTokens';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { PromptMessage } from '../../components/PromptMessage';
+import { PromptProgress } from '../../components/PromptProgress';
+import { Resolvables } from '../../components/Resolvables';
 import { useComponents } from '../../contexts/components';
-import { ListProvider } from '../../contexts/list';
-import { usePaletteContext } from '../../contexts/palette';
 import { usePromptContext } from '../../contexts/prompt';
-import { TokensProvider } from '../../contexts/tokens';
-import { Choice, ChoiceListItem } from '../../types/Choice';
+import { Choice } from '../../types/Choice';
 import { PromptProps } from '../../types/PromptProps';
 import { Resolvable } from '../../types/Resolvable';
 import { call } from '../../utils/call';
-import { useHotkeys } from '../../utils/useHotKeys';
 
-import { MultiChoiceContainer } from './MultiChoiceContainer';
-import { MultiChoiceListItem } from './MultiChoiceListItem';
-import { MultiChoiceMenuList } from './MultiChoiceMenuList';
-import { MultiChoiceTokens } from './MultiChoiceTokens';
-
-export interface MultiChoiceProps<V extends unknown[], In, Out>
-  extends PromptProps<V, In, Out> {
-  choices: Resolvable<readonly Choice<V, In>[], [In]>;
-  message?: Resolvable<string, [In]>;
-}
-
-interface MultiChoiceComponent {
-  <V extends unknown[], In, Out>(
-    props: MultiChoiceProps<V, In, Out>,
-  ): React.ReactElement | null;
-}
+import { MultiChoicePromptCheckbox } from './MultiChoicePromptCheckbox';
+import {
+  MultiChoicePromptContainer,
+  MultiChoicePromptContainerProps,
+} from './MultiChoicePromptContainer';
+import { MultiChoicePromptList } from './MultiChoicePromptList';
+import { MultiChoicePromptSearch } from './MultiChoicePromptSearch';
+import { MultiChoicePromptContextProvider } from './context';
 
 const identity = <I, O>(x: I): O => (x as unknown) as O;
 
-export const MultiChoice: MultiChoiceComponent = <
-  V extends unknown[],
-  In,
-  Out
->({
+export interface MultiChoiceProps<V, In, Out>
+  extends PromptProps<V[], In, Out> {
+  as?: MultiChoicePromptContainerProps['as'];
+  choices: Resolvable<readonly Choice<V, In>[], [In]>;
+  message?: Resolvable<string, [In]>;
+  render?: Resolvable<React.ReactNode, [In]>;
+  renderError?(error: Error): React.ReactNode;
+  renderProgress?(): React.ReactNode;
+}
+
+interface MultiChoiceComponent {
+  <V, In, Out>(props: MultiChoiceProps<V, In, Out>): React.ReactElement | null;
+}
+
+export const MultiChoice: MultiChoiceComponent = <V, In, Out>({
+  as,
   choices,
   message,
+  render,
+  renderError,
+  renderProgress,
   resolve = identity,
 }: MultiChoiceProps<V, In, Out>): React.ReactElement | null => {
   const components = useComponents();
-  const { state } = usePaletteContext();
-  const { onCommit, onExit, value } = usePromptContext();
-
-  useHotkeys('escape', onExit);
+  const { onCommit, value } = usePromptContext();
 
   const handleSubmit = React.useCallback(
-    async (selected: ChoiceListItem[]) => {
+    async (chosen: readonly Choice<V, In>[]) => {
       // TODO: pending
       const choiceResults = await Promise.all(
-        selected.map(choice => call(choice.resolve, value)),
+        chosen.map(choice => call(choice.resolve, value)),
       );
-      const result = call(resolve, choiceResults as V, value);
+      const result = call(resolve, choiceResults, value);
       onCommit(result);
     },
     [onCommit, resolve, value],
   );
 
-  const choicesResult = useResolved(() => call(choices, value), [
-    choices,
-    value,
-  ]);
-
-  const messageResult = useResolved(() => call(message, value), [
-    message,
-    value,
-  ]);
-
-  return choicesResult.error || messageResult.error ? (
-    <>uh oh... {console.warn(choicesResult.error || messageResult.error)}</>
-  ) : state.isPending || choicesResult.pending || messageResult.pending ? (
-    <CmdContainer as={components.Surround} onOutsideClick={onExit}>
-      <CmdProgress as={components.Progress} />
-    </CmdContainer>
-  ) : (
-    <ListProvider items={choicesResult.value}>
-      <TokensProvider>
-        <MultiChoiceContainer
-          as={components.Surround}
-          onOutsideClick={onExit}
-          onSubmit={handleSubmit}
-        >
-          {messageResult.value && (
-            <CmdMessage as={components.Message}>
-              {messageResult.value}
-            </CmdMessage>
+  return (
+    <ErrorBoundary
+      fallback={error => (
+        <MultiChoicePromptContainer as={as}>
+          {renderError?.(error) ?? (
+            <PromptMessage>{error.message}</PromptMessage>
           )}
-          <MultiChoiceTokens />
-          <MultiChoiceMenuList as={components.List}>
-            {({ focused, item, onSelect }) => (
-              <MultiChoiceListItem
-                focused={focused}
-                item={item}
-                onSelect={onSelect}
-              />
-            )}
-          </MultiChoiceMenuList>
-        </MultiChoiceContainer>
-      </TokensProvider>
-    </ListProvider>
+        </MultiChoicePromptContainer>
+      )}
+    >
+      <Resolvables
+        fallback={() => (
+          <MultiChoicePromptContainer as={as}>
+            {renderProgress?.() ?? <PromptProgress />}
+          </MultiChoicePromptContainer>
+        )}
+        input={value}
+        resolvables={{
+          choices,
+          message,
+          render,
+        }}
+      >
+        {results => (
+          <MultiChoicePromptContextProvider
+            choices={results.choices}
+            onSubmit={handleSubmit}
+          >
+            <MultiChoicePromptContainer as={as}>
+              {results.render ?? (
+                <>
+                  {results.message && (
+                    <PromptMessage>{results.message}</PromptMessage>
+                  )}
+                  <CmdTokenGroup as={components.TokenGroup}>
+                    <DismissibleTokens as={components.Token} />
+                    <MultiChoicePromptSearch />
+                  </CmdTokenGroup>
+                  <MultiChoicePromptList>
+                    {({ focused, item, onSelect, selected }) => (
+                      <CmdListItem
+                        as={components.Option}
+                        focused={focused}
+                        id={item.id}
+                        label={item.label}
+                        onSelect={onSelect}
+                      >
+                        <MultiChoicePromptCheckbox checked={selected} />
+                        <CmdHighlighted
+                          as={components.Mark}
+                          label={item.label}
+                          matches={item.matches}
+                        />
+                      </CmdListItem>
+                    )}
+                  </MultiChoicePromptList>
+                </>
+              )}
+            </MultiChoicePromptContainer>
+          </MultiChoicePromptContextProvider>
+        )}
+      </Resolvables>
+    </ErrorBoundary>
   );
 };

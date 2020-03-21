@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 
-import { fontFamily } from './constants';
+import { body, dark } from './typography';
 
 export const Message = styled.div`
+  ${body}
+  ${dark}
   background-color: transparent;
-  color: #2a3742;
   cursor: default;
-  font-family: ${fontFamily};
-  font-size: 13px;
-  margin: 6px 10px 0;
+  margin: 0.5em 0.75em;
 `;

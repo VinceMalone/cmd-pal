@@ -9,14 +9,17 @@ interface TokensContextValue {
   state: duck.State;
 }
 
-export const TokensContext = React.createContext<TokensContextValue>({
-  dispatch: () => {
-    throw new Error(`"Tokens" context doesn't have a provider`);
-  },
-  state: duck.init([]),
-});
+export const TokensContext = React.createContext<TokensContextValue | null>(
+  null,
+);
 
-export const useTokensContext = () => React.useContext(TokensContext);
+export const useTokensContext = () => {
+  const context = React.useContext(TokensContext);
+  if (context === null) {
+    throw new Error('useTokensContext must be used inside a TokensProvider');
+  }
+  return context;
+};
 
 export interface TokensProviderProps {
   children?: React.ReactNode;

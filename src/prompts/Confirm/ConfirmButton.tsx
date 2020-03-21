@@ -5,7 +5,7 @@ import { useConfirmPromptContext } from './context';
 
 const Button = styled.button<{ focused: boolean }>`
   margin: 2px;
-  outline: ${props => (props.focused ? '1px dotted black' : '')};
+  outline: ${props => (props.focused ? 'black dotted 1px' : '')};
 `;
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

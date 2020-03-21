@@ -59,8 +59,7 @@ export { list } from './list';
 
 export const multi = [
   Prompts.MultiChoice({
-    // @ts-ignore
-    choices, // TODO
+    choices,
     message: 'Select one or more',
     resolve: console.log,
   }),

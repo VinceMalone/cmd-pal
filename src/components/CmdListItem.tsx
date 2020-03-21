@@ -1,7 +1,26 @@
 import * as React from 'react';
+import styled from 'styled-components';
+
+// filter: ${props => props['aria-selected'] ? 'invert(100%)' : 'invert(0%)'};
+
+const ListItem = styled.div`
+  /* background-color: white; */
+  outline-color: black;
+  outline-offset: -1px;
+  outline-width: 1px;
+  outline-style: ${props => (props['aria-selected'] ? 'dotted' : 'none')};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+`;
 
 export interface CmdListItemProps {
-  as?: React.ElementType<{}>;
+  as?: React.ComponentType<{
+    // TODO
+    id?: string;
+    onClick?(): void;
+    role?: string;
+  }>;
   children?: React.ReactNode;
   focused?: boolean;
   id: string;
@@ -10,7 +29,7 @@ export interface CmdListItemProps {
 }
 
 export const CmdListItem: React.FC<CmdListItemProps> = ({
-  as: As = 'div',
+  as,
   children,
   focused,
   id,
@@ -23,15 +42,16 @@ export const CmdListItem: React.FC<CmdListItemProps> = ({
   }, [id, onSelect]);
 
   return (
-    <As
+    <ListItem
       {...props}
       aria-label={label}
       aria-selected={focused}
+      as={as}
       id={id}
       onClick={handleClick}
       role="treeitem"
     >
       {children}
-    </As>
+    </ListItem>
   );
 };

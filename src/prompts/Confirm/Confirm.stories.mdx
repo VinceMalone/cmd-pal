@@ -1,0 +1,28 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { ThemeProvider } from 'styled-components';
+
+import { Confirm } from './Confirm';
+
+<Meta title="Confirm" component={Confirm} />
+
+# Confirm
+
+TODO
+
+<Preview>
+  <Story name="Confirm">
+    <>
+      <div id="cmd-pal-root" />
+      <ThemeProvider
+        theme={{
+          maxWidth: '37.5rem',
+          offsetTop: '2rem',
+          offsetSides: '2rem',
+          zIndex: 999999,
+        }}
+      >
+        <Confirm />
+      </ThemeProvider>
+    </>
+  </Story>
+</Preview>

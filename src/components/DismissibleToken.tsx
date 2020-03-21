@@ -5,18 +5,16 @@ import { removeAtIndex, useTokensContext } from '../contexts/tokens';
 
 export interface DismissibleTokenProps {
   as?: CmdTokenProps['as'];
-  focused: boolean;
   index: number;
   label: string;
 }
 
 export const DismissibleToken: React.FC<DismissibleTokenProps> = ({
   as,
-  focused,
   index,
   label,
 }) => {
-  const { dispatch } = useTokensContext();
+  const { dispatch, state } = useTokensContext();
 
   const handleClick = React.useCallback(() => dispatch(removeAtIndex(index)), [
     dispatch,
@@ -24,7 +22,12 @@ export const DismissibleToken: React.FC<DismissibleTokenProps> = ({
   ]);
 
   return (
-    <CmdToken as={as} focused={focused} label={label} onClick={handleClick}>
+    <CmdToken
+      as={as}
+      focused={state.focusedIndex === index}
+      label={label}
+      onClick={handleClick}
+    >
       {label}
     </CmdToken>
   );

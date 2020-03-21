@@ -4,3 +4,4 @@
 - Is the _keydown repeat_ check an good UX for `Backspace` or `Delete`?
 - Should focus move to _list item_ when focusing the _token_?
 - Is `esc` to **close** too aggressive?
+  - Should it clear the search first?

@@ -1,7 +1,9 @@
 import * as React from 'react';
 
 import { CmdContainer, CmdContainerProps } from '../../components/CmdContainer';
+import { useComponents } from '../../contexts/components';
 import { usePromptContext } from '../../contexts/prompt';
+import { add, useTokensContext } from '../../contexts/tokens';
 import { useAutoFocus } from '../../utils/useAutoFocus';
 
 import { useListPromptContext } from './context';
@@ -13,14 +15,15 @@ export interface ListPromptContainerProps {
 }
 
 export const ListPromptContainer: React.FC<ListPromptContainerProps> = ({
-  as,
+  as: As,
   children,
   onKeyDown,
 }) => {
+  const { Surround } = useComponents();
   const { onExit } = usePromptContext();
 
   const containerRef = React.useRef<HTMLElement>(null);
-  useAutoFocus(containerRef, true);
+  // useAutoFocus(containerRef, true); // TODO: this is "standard", but focus should really be given to the input
 
   const handleKeyDown = React.useCallback(
     (evt: React.KeyboardEvent<HTMLElement>) => {
@@ -39,55 +42,12 @@ export const ListPromptContainer: React.FC<ListPromptContainerProps> = ({
 
   return (
     <CmdContainer
-      as={as}
+      as={As ?? Surround}
       onKeyDown={handleKeyDown}
       onOutsideClick={onExit}
       ref={containerRef}
     >
       {children}
     </CmdContainer>
-  );
-};
-
-export interface ListPromptContainerReadyProps {
-  as?: ListPromptContainerProps['as'];
-  children?: React.ReactNode;
-}
-
-export const ListPromptContainerReady: React.FC<ListPromptContainerReadyProps> = ({
-  as,
-  children,
-}) => {
-  const { submit } = useListPromptContext();
-
-  const handleKeyDown = React.useCallback(
-    (evt: React.KeyboardEvent<HTMLElement>) => {
-      switch (evt.key) {
-        case 'ArrowLeft':
-        case 'ArrowUp':
-          evt.preventDefault();
-          // TODO
-          break;
-        case 'ArrowRight':
-        case 'ArrowDown':
-          evt.preventDefault();
-          // TODO
-          break;
-        case 'Enter': {
-          if (evt.shiftKey) {
-            const list: string[] = []; // TODO
-            submit(list);
-          }
-          break;
-        }
-      }
-    },
-    [submit],
-  );
-
-  return (
-    <ListPromptContainer as={as} onKeyDown={handleKeyDown}>
-      {children}
-    </ListPromptContainer>
   );
 };
