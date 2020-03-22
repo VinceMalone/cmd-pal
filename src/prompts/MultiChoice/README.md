@@ -33,6 +33,7 @@
 > ❓ How should the list filter/matching algorithm work?
 
 - `LIST_FILTER_ALGORITHM/SPREAD_TO_EXACT` (default)
+- `LIST_FILTER_ALGORITHM/EXACT_TO_WORD` (preferred)
 
 #### Circular keyboard navigation for "selected tokens"
 
@@ -40,7 +41,7 @@
 
 What should happen when an _edge_ token is focused and navigation (Arrow Left/Right or Up/Down) occurs?
 
-- `TOKEN_KEYBOARD_NAVIGATION/CIRCULAR` (default)
+- `TOKEN_KEYBOARD_NAVIGATION/CIRCULAR` (default) (preferred)
   - Focus moves to the _opposite ended_ token.
 - `TOKEN_KEYBOARD_NAVIGATION/CLOSED`
   - Nothing; focus stays where it is.
@@ -49,17 +50,19 @@ What should happen when an _edge_ token is focused and navigation (Arrow Left/Ri
 
 > ❓ Is the _keyboard repeat_ check a good UX for `Backspace` and `Delete`?
 
-- `tokens/KEYBOARD_REPEAT/PREVENT` (default)
+- `tokens/KEYBOARD_REPEAT/PREVENT` (default) (preferred)
 - `tokens/KEYBOARD_REPEAT/TIMEOUT`
 - `tokens/KEYBOARD_REPEAT/ALLOW`
 
-- What does _clear all_ look like? How valuable would this be?
+What does _clear all_ look like? How valuable would this be?
+
+- Valuable; see "escape to close" experiment
 
 #### List UI when focusing Token
 
 > ❓ What should happen with the list when focusing a 'selected token'?
 
-- `TOKEN_FOCUS_LIST_ITEM_UI/NONE` (default)
+- `TOKEN_FOCUS_LIST_ITEM_UI/NONE` (default) (preferred)
   - Leave the list (and filter) as is.
 - `TOKEN_FOCUS_LIST_ITEM_UI/REFLECT`
   - Clear the filter and focus the selected item (that matches the selected token.)
@@ -72,20 +75,20 @@ What should happen when an _edge_ token is focused and navigation (Arrow Left/Ri
   - Arrow keys stick to native input functionality — Tokens cannot be focused.
 - `FOCUS_TOKENS_WITH_FILTER/ALLOW`
   - Cursor moves through filter input value, but can be _passed_ to Tokens.
-- `FOCUS_TOKENS_WITH_FILTER/ALLOW_BUT_PREVENT_REPEAT`
+- `FOCUS_TOKENS_WITH_FILTER/ALLOW_BUT_PREVENT_REPEAT` (preferred)
   - Same as "ALLOW", but won't focus Tokens if arrow key is being held.
 
 #### Keys to remove focused Token
 
 > ❓ Which keys should trigger a _remove_ from a focused Token?
 
-- `REMOVE_TOKEN_KEYS/ENTER,BACKSPACE,DELETE` (default)
+- `REMOVE_TOKEN_KEYS/ENTER,BACKSPACE,DELETE` (default) (preferred)
 
 #### Token selection order
 
 > ❓ In what order should the tokens appear in?
 
-- `TOKEN_ORDER/TIME_OF_SELECTION` (default)
+- `TOKEN_ORDER/TIME_OF_SELECTION` (default) (preferred)
 - `TOKEN_ORDER/SAME_AS_LIST`
 
 #### Escape to close
@@ -93,9 +96,7 @@ What should happen when an _edge_ token is focused and navigation (Arrow Left/Ri
 > ❓ Is `esc` to close [the prompt] too aggressive? Should it _clear values_ first?
 
 - `ESCAPE_TO_CLOSE/IMMEDIATE` (default)
-- `ESCAPE_TO_CLOSE/CLEAR_FIRST`
-
-- Confirm on dirty?
+- `ESCAPE_TO_CLOSE/CLEAR_FIRST` (preferred)
 
 #### Multi-select
 
@@ -107,7 +108,40 @@ What should happen when an _edge_ token is focused and navigation (Arrow Left/Ri
 TODO - more experiments
 
 - Should `Arrow(Down|UP)` re-focus the list? (same as `input` event)
+
 - Which Token should be focused after pressing `Backspace` and `Delete`?
+
 - Should _selected_ list items still appear in the list?
+
   - Do _selected_ list items appear in the list even if they don't match the _filter_?
+
 - Does selecting (or deselecting) a list item reset the filter value?
+
+- Should `Tab` navigate the Token focus?
+
+  - %% Doesn't hurt; try it
+
+- Where should focus land after removing a focused Token?
+
+  - %% same [wrapped] index
+  - %% same [wrapped] index - 1 (or + 1 with `Delete`)
+
+- Should scrolling change the current _focus index_?
+
+  - %% maybe after a timeout?
+  - %% maybe hover changes the focus index?
+
+---
+
+**Notes from session with Matt T**
+
+- Use a placeholder to indicate _filterable_
+- ❗️ Allow _jumping_ in the list
+  - Paging — `PageUp` and `PageDown`
+  - Go to Top/Bottom — `⌘+↑` or `⌃+↑`
+- Consider highlighting matched text in Tokens
+- [Confirm Prompt] perhaps "Space" should _submit_ the prompt
+
+---
+
+- Try out this API for an action that takes an _index_ or _delta_ — rather than different functions, use the following argument: `{ index: number } | { delta: number }`.

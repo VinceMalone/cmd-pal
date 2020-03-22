@@ -3,7 +3,7 @@ import * as React from 'react';
 import { InputToken, InputTokenProps } from '../../components/InputToken';
 import { useComponents } from '../../contexts/components';
 import { moveFocus, search, useListContext } from '../../contexts/list';
-import { toggle, useTokensContext } from '../../contexts/tokens';
+import { toggle, unfocus, useTokensContext } from '../../contexts/tokens';
 import { ChoiceListItem } from '../../types/Choice';
 
 import { useMultiChoicePromptContext } from './context';
@@ -25,12 +25,12 @@ export const MultiChoicePromptSearch: React.FC<MultiChoicePromptSearchProps> = (
     delta: number,
   ) => {
     evt.preventDefault();
-    if (tokensContext.state.focusedIndex === -1) {
-      listContext.dispatch(moveFocus(delta));
+    if (tokensContext.state.focusedIndex > -1) {
+      tokensContext.dispatch(unfocus());
     }
-
-    // TODO: consider `else { unfocus tokens and move list focusedIndex }`
-    // ... (similar to how onChange works when a token is focused)
+    // TODO: experiment?
+    // Should the focus always move or only when `tokensContext.state.focusedIndex === -1`?
+    listContext.dispatch(moveFocus(delta));
   };
 
   const handleSelect = () => {
