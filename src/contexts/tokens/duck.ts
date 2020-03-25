@@ -5,24 +5,23 @@ import { circularClamp } from '../../utils/circularClamp';
 enum ActionType {
   Add = 'ADD',
   MoveFocus = 'MOVE_FOCUS',
-  RemoveAtIndex = 'REMOVE_AT_INDEX',
-  RemoveAtOffset = 'REMOVE_AT_OFFSET',
+  Remove = 'REMOVE',
   Toggle = 'TOGGLE',
   Unfocus = 'UNFOCUS',
 }
 
+type DeltaOrIndex = { delta: number } | { index: number };
+
 type AddAction = Action<ActionType.Add, Token>;
-type MoveFocusAction = Action<ActionType.MoveFocus, number>;
-type RemoveAtIndexAction = Action<ActionType.RemoveAtIndex, number>;
-type RemoveAtOffsetAction = Action<ActionType.RemoveAtOffset, number>;
+type MoveFocusAction = Action<ActionType.MoveFocus, DeltaOrIndex>;
+type RemoveAction = Action<ActionType.Remove, DeltaOrIndex>;
 type ToggleAction = Action<ActionType.Toggle, Token>;
 type UnfocusAction = Action<ActionType.Unfocus>;
 
 export type Actions =
   | AddAction
   | MoveFocusAction
-  | RemoveAtIndexAction
-  | RemoveAtOffsetAction
+  | RemoveAction
   | ToggleAction
   | UnfocusAction;
 
@@ -52,19 +51,14 @@ export const add = (token: Token): AddAction => ({
   payload: token,
 });
 
-export const moveFocus = (delta: number): MoveFocusAction => ({
+export const moveFocus = (payload: DeltaOrIndex): MoveFocusAction => ({
   type: ActionType.MoveFocus,
-  payload: delta,
+  payload,
 });
 
-export const removeAtIndex = (index: number): RemoveAtIndexAction => ({
-  type: ActionType.RemoveAtIndex,
-  payload: index,
-});
-
-export const removeAtOffset = (delta: number): RemoveAtOffsetAction => ({
-  type: ActionType.RemoveAtOffset,
-  payload: delta,
+export const remove = (payload: DeltaOrIndex): RemoveAction => ({
+  type: ActionType.Remove,
+  payload,
 });
 
 export const toggle = (token: Token): ToggleAction => ({
@@ -76,49 +70,59 @@ export const unfocus = (): UnfocusAction => ({
   type: ActionType.Unfocus,
 });
 
+const removeAtIndex = (state: State, index: number): State => ({
+  ...state,
+  focusedIndex: -1,
+  tokens: removeAt(state.tokens, index),
+});
+
+const removeAtOffset = (state: State, delta: number): State => {
+  const removalIndex = wrapIndex(
+    state.focusedIndex + delta,
+    state.tokens.length,
+  );
+
+  const tokens = removeAt(state.tokens, removalIndex);
+
+  // Move focus to `removalIndex` and ensure it isn't out of bounds
+  const focusedIndex = wrapIndex(removalIndex, tokens.length);
+
+  return {
+    ...state,
+    focusedIndex,
+    tokens,
+  };
+};
+
 export const reducer = (state: State, action: Actions): State => {
   switch (action.type) {
     case ActionType.Add: {
       return {
         ...state,
         tokens: [...state.tokens, action.payload],
+        // TODO: experiment
+        // tokens: [...state.tokens, action.payload].sort(
+        //   (a, b) => a.realIndex - b.realIndex,
+        // ),
       };
     }
 
     case ActionType.MoveFocus: {
+      const index =
+        'delta' in action.payload
+          ? action.payload.delta + state.focusedIndex
+          : action.payload.index;
+
       return {
         ...state,
-        focusedIndex: wrapIndex(
-          state.focusedIndex + action.payload,
-          state.tokens.length,
-        ),
+        focusedIndex: wrapIndex(index, state.tokens.length),
       };
     }
 
-    case ActionType.RemoveAtIndex: {
-      return {
-        ...state,
-        focusedIndex: -1,
-        tokens: removeAt(state.tokens, action.payload),
-      };
-    }
-
-    case ActionType.RemoveAtOffset: {
-      const removalIndex = wrapIndex(
-        state.focusedIndex + action.payload,
-        state.tokens.length,
-      );
-
-      const tokens = removeAt(state.tokens, removalIndex);
-
-      // Move focus to `removalIndex` and ensure it isn't out of bounds
-      const focusedIndex = wrapIndex(removalIndex, tokens.length);
-
-      return {
-        ...state,
-        focusedIndex,
-        tokens,
-      };
+    case ActionType.Remove: {
+      return 'index' in action.payload
+        ? removeAtIndex(state, action.payload.index)
+        : removeAtOffset(state, action.payload.delta);
     }
 
     case ActionType.Toggle: {
@@ -127,7 +131,7 @@ export const reducer = (state: State, action: Actions): State => {
 
       return index === -1
         ? reducer(state, add(action.payload))
-        : reducer(state, removeAtIndex(index));
+        : reducer(state, remove({ index }));
     }
 
     case ActionType.Unfocus: {

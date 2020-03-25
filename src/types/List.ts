@@ -16,4 +16,5 @@ interface Searchable {
 
 export interface ListItem extends Item, Searchable {
   id: string;
+  // realIndex: number; // TODO
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { CmdToken, CmdTokenProps } from '../components/CmdToken';
-import { removeAtIndex, useTokensContext } from '../contexts/tokens';
+import { remove, useTokensContext } from '../contexts/tokens';
 
 export interface DismissibleTokenProps {
   as?: CmdTokenProps['as'];
@@ -16,7 +16,7 @@ export const DismissibleToken: React.FC<DismissibleTokenProps> = ({
 }) => {
   const { dispatch, state } = useTokensContext();
 
-  const handleClick = React.useCallback(() => dispatch(removeAtIndex(index)), [
+  const handleClick = React.useCallback(() => dispatch(remove({ index })), [
     dispatch,
     index,
   ]);

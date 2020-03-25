@@ -2,11 +2,10 @@ import * as React from 'react';
 import { useMeasure } from 'react-use';
 import styled, { css } from 'styled-components';
 
-import { useExperiments } from '../contexts/experiments';
+import { useExperiments } from '../components/Experiments';
 import {
   moveFocus,
-  removeAtIndex,
-  removeAtOffset,
+  remove,
   unfocus,
   useTokensContext,
 } from '../contexts/tokens';
@@ -70,7 +69,7 @@ export const InputToken = <T extends Token>({
   onSubmit,
   value,
 }: InputTokenProps<T>): React.ReactElement => {
-  const experiment = useExperiments();
+  const { experiment } = useExperiments();
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   useAutoFocus(inputRef, true);
@@ -94,24 +93,51 @@ export const InputToken = <T extends Token>({
     evt: React.KeyboardEvent<HTMLInputElement>,
     delta: number,
   ) => {
-    const allow = !experiment('FOCUS_TOKENS_WITH_FILTER', 'PREVENT');
-    const norepeat =
-      !evt.repeat ||
-      !experiment('FOCUS_TOKENS_WITH_FILTER', 'ALLOW_BUT_PREVENT_REPEAT');
+    const canMoveFocus = () => {
+      if (value.length === 0) {
+        return true;
+      }
+      if (experiment('FOCUS_TOKENS_WITH_FILTER', 'PREVENT')) {
+        return false;
+      }
+      if (focusedIndex > -1) {
+        return true;
+      }
+      const norepeat =
+        !experiment('FOCUS_TOKENS_WITH_FILTER', 'ALLOW_BUT_PREVENT_REPEAT') ||
+        !evt.repeat;
+      const { selectionEnd, selectionStart } = evt.currentTarget;
+      const outofbounds =
+        (evt.key === 'ArrowLeft' && selectionStart === 0) ||
+        (evt.key === 'ArrowRight' && selectionEnd === value.length);
+      return norepeat && outofbounds;
+    };
 
-    const { selectionEnd, selectionStart } = evt.currentTarget;
-    const outofbounds =
-      (evt.key === 'ArrowLeft' && selectionStart === 0) ||
-      (evt.key === 'ArrowRight' && selectionEnd === value.length);
-
-    if (
-      value.length === 0 ||
-      // ↓ PREVENT flag off
-      (allow && (focusedIndex > -1 || (norepeat && outofbounds)))
-    ) {
+    if (canMoveFocus()) {
       evt.preventDefault();
-      dispatch(moveFocus(delta));
+      dispatch(moveFocus({ delta }));
     }
+
+    //
+
+    // const allow = !experiment('FOCUS_TOKENS_WITH_FILTER', 'PREVENT');
+    // const norepeat =
+    //   !evt.repeat ||
+    //   !experiment('FOCUS_TOKENS_WITH_FILTER', 'ALLOW_BUT_PREVENT_REPEAT');
+
+    // const { selectionEnd, selectionStart } = evt.currentTarget;
+    // const outofbounds =
+    //   (evt.key === 'ArrowLeft' && selectionStart === 0) ||
+    //   (evt.key === 'ArrowRight' && selectionEnd === value.length);
+
+    // if (
+    //   value.length === 0 ||
+    //   // ↓ PREVENT flag off
+    //   (allow && (focusedIndex > -1 || (norepeat && outofbounds)))
+    // ) {
+    //   evt.preventDefault();
+    //   dispatch(moveFocus(delta));
+    // }
   };
 
   const handleBackspace = (evt: React.KeyboardEvent<HTMLInputElement>) => {
@@ -120,12 +146,12 @@ export const InputToken = <T extends Token>({
     }
 
     const delta = focusedIndex > -1 ? 0 : evt.key === 'Delete' ? 1 : -1;
-    dispatch(removeAtOffset(delta));
+    dispatch(remove({ delta }));
   };
 
   const handleEnter = (evt: React.KeyboardEvent<HTMLInputElement>) => {
     if (focusedIndex !== -1) {
-      dispatch(removeAtIndex(focusedIndex));
+      dispatch(remove({ index: focusedIndex }));
     } else if (evt.shiftKey) {
       onSubmit(tokens as readonly T[]);
     } else {

@@ -19,7 +19,7 @@ export const ListPromptTextInput: React.FC<ListPromptTextInputProps> = () => {
   ) => {
     if (value.length === 0) {
       evt.preventDefault();
-      dispatch(moveFocus(delta));
+      dispatch(moveFocus({ delta }));
     }
   };
 

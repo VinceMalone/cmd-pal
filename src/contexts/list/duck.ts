@@ -33,9 +33,10 @@ export type Actions =
 const getActiveDescendant = (items: ListItem[], focusedIndex: number) =>
   items[focusedIndex] == null ? undefined : items[focusedIndex].id;
 
-const toSearchableItem = (item: Item): ListItem => ({
+const toSearchableItem = (item: Item, index: number): ListItem => ({
   ...item,
   id: createDomId('list-item'),
+  // realIndex: index, // TODO
   matches: [],
 });
 

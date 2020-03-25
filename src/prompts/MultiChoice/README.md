@@ -107,7 +107,7 @@ What does _clear all_ look like? How valuable would this be?
 
 TODO - more experiments
 
-- Should `Arrow(Down|UP)` re-focus the list? (same as `input` event)
+- Should `Arrow(Down|Up)` re-focus the list? (same as `input` event)
 
 - Which Token should be focused after pressing `Backspace` and `Delete`?
 

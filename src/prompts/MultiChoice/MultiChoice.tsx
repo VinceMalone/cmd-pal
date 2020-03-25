@@ -9,7 +9,6 @@ import { PromptMessage } from '../../components/PromptMessage';
 import { PromptProgress } from '../../components/PromptProgress';
 import { Resolvables } from '../../components/Resolvables';
 import { useComponents } from '../../contexts/components';
-import { ExperimentsProvider } from '../../contexts/experiments';
 import { usePromptContext } from '../../contexts/prompt';
 import { Choice } from '../../types/Choice';
 import { PromptProps } from '../../types/PromptProps';
@@ -76,77 +75,70 @@ export const MultiChoice: MultiChoiceComponent = <V, In, Out>({
         </MultiChoicePromptContainer>
       )}
     >
-      <ExperimentsProvider
-        experiments={{
-          FOCUS_TOKENS_WITH_FILTER: 'ALLOW_BUT_PREVENT_REPEAT',
-          TOKEN_ORDER: 'TIME_OF_SELECTION',
+      <Resolvables
+        fallback={() => (
+          <MultiChoicePromptContainer as={as}>
+            {renderProgress?.() ?? <PromptProgress />}
+          </MultiChoicePromptContainer>
+        )}
+        input={value}
+        resolvables={{
+          choices,
+          message,
+          render,
         }}
       >
-        <Resolvables
-          fallback={() => (
+        {results => (
+          <MultiChoicePromptContextProvider
+            choices={results.choices}
+            onSubmit={handleSubmit}
+          >
             <MultiChoicePromptContainer as={as}>
-              {renderProgress?.() ?? <PromptProgress />}
-            </MultiChoicePromptContainer>
-          )}
-          input={value}
-          resolvables={{
-            choices,
-            message,
-            render,
-          }}
-        >
-          {results => (
-            <MultiChoicePromptContextProvider
-              choices={results.choices}
-              onSubmit={handleSubmit}
-            >
-              <MultiChoicePromptContainer as={as}>
-                {results.render ?? (
-                  <>
-                    {results.message && (
-                      <PromptMessage>
-                        {/* TODO: this <Note> shit */}
-                        <NoteContainer>
-                          {results.message}
-                          <Note>
-                            (
-                            <span title="Shift + Return">
-                              <code>⇧</code> + <code>⏎</code>
-                            </span>{' '}
-                            to submit)
-                          </Note>
-                        </NoteContainer>
-                      </PromptMessage>
-                    )}
-                    <CmdTokenGroup as={components.TokenGroup}>
-                      <DismissibleTokens as={components.Token} />
-                      <MultiChoicePromptSearch />
-                    </CmdTokenGroup>
-                    <MultiChoicePromptList>
-                      {({ focused, item, onSelect, selected }) => (
-                        <CmdListItem
-                          as={components.Option}
-                          focused={focused}
-                          id={item.id}
+              {results.render ?? (
+                <>
+                  {results.message && (
+                    <PromptMessage>
+                      {/* TODO: this <Note> shit */}
+                      <NoteContainer>
+                        {results.message}
+                        <Note>
+                          (
+                          <span title="Shift + Return">
+                            <code>⇧</code> + <code>⏎</code>
+                          </span>{' '}
+                          to submit)
+                        </Note>
+                      </NoteContainer>
+                    </PromptMessage>
+                  )}
+                  <CmdTokenGroup as={components.TokenGroup}>
+                    <DismissibleTokens as={components.Token} />
+                    <MultiChoicePromptSearch />
+                  </CmdTokenGroup>
+                  <MultiChoicePromptList>
+                    {({ focused, item, onSelect, selected }) => (
+                      <CmdListItem
+                        as={components.Option}
+                        focused={focused}
+                        id={item.id}
+                        label={item.label}
+                        onSelect={onSelect}
+                      >
+                        <MultiChoicePromptCheckbox checked={selected} />
+                        <CmdHighlighted
+                          as={components.Mark}
                           label={item.label}
-                          onSelect={onSelect}
-                        >
-                          <MultiChoicePromptCheckbox checked={selected} />
-                          <CmdHighlighted
-                            as={components.Mark}
-                            label={item.label}
-                            matches={item.matches}
-                          />
-                        </CmdListItem>
-                      )}
-                    </MultiChoicePromptList>
-                  </>
-                )}
-              </MultiChoicePromptContainer>
-            </MultiChoicePromptContextProvider>
-          )}
-        </Resolvables>
-      </ExperimentsProvider>
+                          matches={item.matches}
+                        />
+                      </CmdListItem>
+                    )}
+                  </MultiChoicePromptList>
+                </>
+              )}
+            </MultiChoicePromptContainer>
+          </MultiChoicePromptContextProvider>
+        )}
+      </Resolvables>
     </ErrorBoundary>
   );
 };
