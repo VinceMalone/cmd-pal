@@ -4,8 +4,8 @@ import { useMeasure } from 'react-use';
 import { VisuallyHidden } from './VisuallyHidden';
 
 export interface Rect {
-  height: number;
-  width: number;
+  readonly height: number;
+  readonly width: number;
 }
 
 export interface MeasureProps {

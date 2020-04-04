@@ -1,3 +1,8 @@
+export interface Match {
+  end: number;
+  start: number;
+}
+
 export interface Part {
   id: string;
   isMatch: boolean;
@@ -11,10 +16,10 @@ export interface Item {
 }
 
 interface Searchable {
-  matches: [number, number][];
+  matches: Match[];
 }
 
 export interface ListItem extends Item, Searchable {
   id: string;
-  // realIndex: number; // TODO
+  ordinal: number;
 }

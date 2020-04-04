@@ -1,4 +1,4 @@
-import { ListItem } from '../types/List';
+import { ListItem, Match } from '../../types/List';
 
 const compare = (a: string, b: string) =>
   a.toLocaleLowerCase() === b.toLocaleLowerCase();
@@ -16,31 +16,29 @@ const groupBySequence = (
   return acc;
 };
 
-const toFirstAndLast = (sequence: number[]): [number, number] => [
-  sequence[0],
-  sequence[sequence.length - 1],
-];
+const toFirstAndLast = (sequence: number[]): Match => ({
+  start: sequence[0],
+  end: sequence[sequence.length - 1] + 1,
+});
 
-export const searchItems = <T extends ListItem>(
-  items: T[],
-  query: string,
-): T[] => {
-  if (query.trim() === '') {
+export const filterItemsCDT = <T extends ListItem>(
+  items: readonly T[],
+  filter: string,
+): readonly T[] => {
+  if (filter.trim() === '') {
     return items;
   }
 
-  // !important: keep this efficient
-
   const results: T[] = [];
 
-  items.forEach(item => {
+  for (const item of items) {
     const indices: number[] = [];
     const { label } = item;
     let labelIndex = 0;
     let queryIndex = 0;
 
-    while (labelIndex < label.length && queryIndex < query.length) {
-      if (compare(label[labelIndex], query[queryIndex])) {
+    while (labelIndex < label.length && queryIndex < filter.length) {
+      if (compare(label[labelIndex], filter[queryIndex])) {
         indices.push(labelIndex);
         queryIndex++;
       }
@@ -48,13 +46,13 @@ export const searchItems = <T extends ListItem>(
       labelIndex++;
     }
 
-    if (queryIndex === query.length) {
+    if (queryIndex === filter.length) {
       results.push({
         ...item,
         matches: indices.reduce(groupBySequence, []).map(toFirstAndLast),
       });
     }
-  });
+  }
 
   return results;
 };

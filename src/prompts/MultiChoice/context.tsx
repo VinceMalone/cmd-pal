@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { FocusProvider } from '../../contexts/focus';
 import { ListProvider } from '../../contexts/list';
 import { TokensProvider } from '../../contexts/tokens';
 import { Choice } from '../../types/Choice';
@@ -45,12 +46,14 @@ export const MultiChoicePromptContextProvider: React.FC<MultiChoicePromptContext
   );
 
   return (
-    <ListProvider items={choices}>
-      <TokensProvider>
-        <MultiChoicePromptContext.Provider value={context}>
-          {children}
-        </MultiChoicePromptContext.Provider>
-      </TokensProvider>
-    </ListProvider>
+    <FocusProvider>
+      <ListProvider items={choices}>
+        <TokensProvider>
+          <MultiChoicePromptContext.Provider value={context}>
+            {children}
+          </MultiChoicePromptContext.Provider>
+        </TokensProvider>
+      </ListProvider>
+    </FocusProvider>
   );
 };

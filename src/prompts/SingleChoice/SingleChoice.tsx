@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import { CmdHighlighted } from '../../components/CmdHighlighted';
-import { CmdListItem } from '../../components/CmdListItem';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { PromptMessage } from '../../components/PromptMessage';
-import { PromptProgress } from '../../components/PromptProgress';
 import { Resolvables } from '../../components/Resolvables';
-import { useComponents } from '../../contexts/components';
+import { Mark } from '../../components/base/Mark';
+import { Option } from '../../components/base/Option';
+import { Progress } from '../../components/base/Progress';
 import { usePromptContext } from '../../contexts/prompt';
 import { Choice } from '../../types/Choice';
 import { PromptProps } from '../../types/PromptProps';
@@ -45,7 +44,6 @@ export const SingleChoice: SingleChoiceComponent = <V, In, Out>({
   renderProgress,
   resolve = identity,
 }: SingleChoiceProps<V, In, Out>): React.ReactElement | null => {
-  const components = useComponents();
   const { onCommit, value } = usePromptContext();
 
   const handleSubmit = React.useCallback(
@@ -71,7 +69,7 @@ export const SingleChoice: SingleChoiceComponent = <V, In, Out>({
       <Resolvables
         fallback={() => (
           <SingleChoicePromptContainer as={as}>
-            {renderProgress?.() ?? <PromptProgress />}
+            {renderProgress?.() ?? <Progress />}
           </SingleChoicePromptContainer>
         )}
         input={value}
@@ -95,19 +93,14 @@ export const SingleChoice: SingleChoiceComponent = <V, In, Out>({
                   <SingleChoicePromptSearch />
                   <SingleChoicePromptList>
                     {({ focused, item, onSelect }) => (
-                      <CmdListItem
-                        as={components.Option}
-                        focused={focused}
+                      <Option
                         id={item.id}
                         label={item.label}
                         onSelect={onSelect}
+                        selected={focused}
                       >
-                        <CmdHighlighted
-                          as={components.Mark}
-                          label={item.label}
-                          matches={item.matches}
-                        />
-                      </CmdListItem>
+                        <Mark label={item.label} matches={item.matches} />
+                      </Option>
                     )}
                   </SingleChoicePromptList>
                 </>

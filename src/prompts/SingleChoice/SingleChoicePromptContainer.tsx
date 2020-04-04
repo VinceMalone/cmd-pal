@@ -1,19 +1,17 @@
 import * as React from 'react';
 
-import { CmdContainer, CmdContainerProps } from '../../components/CmdContainer';
-import { useComponents } from '../../contexts/components';
+import { Dialog, DialogProps } from '../../components/base/Dialog';
 import { usePromptContext } from '../../contexts/prompt';
 
 export interface SingleChoicePromptContainerProps {
-  as?: CmdContainerProps['as'];
+  as?: DialogProps['as'];
   children?: React.ReactNode;
 }
 
 export const SingleChoicePromptContainer: React.FC<SingleChoicePromptContainerProps> = ({
-  as: As,
+  as,
   children,
 }) => {
-  const { Surround } = useComponents();
   const { onExit } = usePromptContext();
 
   const handleKeyDown = React.useCallback(
@@ -28,12 +26,8 @@ export const SingleChoicePromptContainer: React.FC<SingleChoicePromptContainerPr
   );
 
   return (
-    <CmdContainer
-      as={As ?? Surround}
-      onKeyDown={handleKeyDown}
-      onOutsideClick={onExit}
-    >
+    <Dialog as={as} onKeyDown={handleKeyDown}>
       {children}
-    </CmdContainer>
+    </Dialog>
   );
 };

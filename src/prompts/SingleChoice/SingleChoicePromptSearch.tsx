@@ -1,24 +1,20 @@
 import * as React from 'react';
 
-import { CmdInput } from '../../components/CmdInput';
-import { useComponents } from '../../contexts/components';
+import { Textbox, TextboxProps } from '../../components/base/Textbox';
 import { moveFocus, search, useListContext } from '../../contexts/list';
 import { ChoiceListItem } from '../../types/Choice';
 import { useAutoFocus } from '../../utils/useAutoFocus';
 
 import { useSingleChoicePromptContext } from './context';
 
-type InputProps = React.RefAttributes<HTMLInputElement> &
-  React.InputHTMLAttributes<HTMLInputElement>;
+// TODO: replace "search" with "filter"
 
-export interface SingleChoicePromptSearchProps {
-  as?: React.ComponentType<InputProps>;
-}
+export interface SingleChoicePromptSearchProps
+  extends Pick<TextboxProps, 'as'> {}
 
 export const SingleChoicePromptSearch: React.FC<SingleChoicePromptSearchProps> = ({
-  as: As,
+  as,
 }) => {
-  const { Input } = useComponents();
   const { submit } = useSingleChoicePromptContext();
   const { dispatch, state } = useListContext<ChoiceListItem>();
   const { focusedIndex, items } = state;
@@ -31,7 +27,7 @@ export const SingleChoicePromptSearch: React.FC<SingleChoicePromptSearchProps> =
     delta: number,
   ) => {
     evt.preventDefault();
-    dispatch(moveFocus(delta));
+    dispatch(moveFocus({ delta }));
   };
 
   const handleEnter = () => {
@@ -56,14 +52,14 @@ export const SingleChoicePromptSearch: React.FC<SingleChoicePromptSearchProps> =
   };
 
   return (
-    <CmdInput
+    <Textbox
+      aria-label="Type to narrow down results."
       aria-activedescendant={state.activeDescendant}
       aria-autocomplete="list"
       aria-haspopup="true"
-      as={As ?? Input}
+      as={as}
       autoCorrect="off"
       autoCapitalize="off"
-      label="Type to narrow down results."
       onChange={evt => dispatch(search(evt.target.value))}
       onKeyDown={handleKeyDown}
       placeholder="Type to narrow down results."

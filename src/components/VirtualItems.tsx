@@ -3,68 +3,65 @@ import { useWindowSize } from 'react-use';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
 
-import { ListItem } from '../types/List';
-
-interface RenderItemProps<T extends ListItem> {
-  focused: boolean;
-  item: T;
-  onSelect(id: string): void;
+interface RenderItemProps {
+  index: number;
 }
 
-export interface VirtualItemsProps<T extends ListItem> {
-  children: (props: RenderItemProps<T>) => React.ReactElement;
-  focusedIndex: number;
+export interface VirtualItemsProps {
+  children: (props: RenderItemProps) => React.ReactElement;
+  itemCount: number;
   itemHeight: number;
-  items: readonly T[];
-  onSelect(index: number): void;
 }
 
-export const VirtualItems = <T extends ListItem>({
-  children,
-  focusedIndex,
-  itemHeight,
-  items,
-  onSelect,
-}: VirtualItemsProps<T>): React.ReactElement => {
+export interface VirtualItemsRef {
+  itemHeight: number;
+  listHeight: number;
+  scrollOffset: number;
+  scrollToItem?(index: number): void;
+}
+
+export const VirtualItems = React.forwardRef<
+  VirtualItemsRef,
+  VirtualItemsProps
+>(({ children, itemCount, itemHeight }, forwardedRef) => {
   const virtualListRef = React.useRef<FixedSizeList>(null);
+  const ref = React.useRef<VirtualItemsRef>({
+    itemHeight: 0,
+    listHeight: 0,
+    scrollOffset: 0,
+  });
 
   const windowSize = useWindowSize();
   let maxHeight = windowSize.height / 2;
   maxHeight = maxHeight - (maxHeight % (itemHeight || 1));
-  const listHeight = Math.min(maxHeight, items.length * itemHeight);
+  const listHeight = Math.min(maxHeight, itemCount * itemHeight);
 
-  const handleSelect = React.useCallback(
-    id => {
-      const index = items.findIndex(item => item.id === id);
-      onSelect(index);
-    },
-    [items, onSelect],
-  );
+  ref.current.itemHeight = itemHeight;
+  ref.current.listHeight = listHeight;
+  ref.current.scrollToItem = (index: number) => {
+    virtualListRef.current?.scrollToItem(index);
+  };
+
+  React.useImperativeHandle(forwardedRef, () => ref.current);
 
   return (
     <AutoSizer disableHeight>
       {({ width }) => (
         <FixedSizeList
           height={listHeight}
-          itemCount={items.length}
+          itemCount={itemCount}
           itemSize={itemHeight}
+          onScroll={({ scrollOffset }) => {
+            ref.current.scrollOffset = scrollOffset;
+          }}
           ref={virtualListRef}
           width={width}
         >
-          {({ index, style }) => {
-            const item = items[index];
-            return (
-              <div style={style}>
-                {children({
-                  focused: index === focusedIndex,
-                  item,
-                  onSelect: handleSelect,
-                })}
-              </div>
-            );
-          }}
+          {({ index, style }) => <div style={style}>{children({ index })}</div>}
         </FixedSizeList>
       )}
     </AutoSizer>
   );
-};
+});
+
+VirtualItems.displayName = 'VirtualItems';

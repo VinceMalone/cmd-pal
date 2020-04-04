@@ -1,14 +1,13 @@
 import * as React from 'react';
 
-import { CmdHighlighted } from '../../components/CmdHighlighted';
-import { CmdListItem } from '../../components/CmdListItem';
-import { CmdTokenGroup } from '../../components/CmdTokenGroup';
-import { DismissibleTokens } from '../../components/DismissibleTokens';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { PromptMessage } from '../../components/PromptMessage';
-import { PromptProgress } from '../../components/PromptProgress';
 import { Resolvables } from '../../components/Resolvables';
-import { useComponents } from '../../contexts/components';
+import { Mark } from '../../components/base/Mark';
+import { Option } from '../../components/base/Option';
+import { Progress } from '../../components/base/Progress';
+import { Tokens } from '../../components/base/Token';
+import { TokenField } from '../../components/base/TokenField';
 import { usePromptContext } from '../../contexts/prompt';
 import { Choice } from '../../types/Choice';
 import { PromptProps } from '../../types/PromptProps';
@@ -20,8 +19,9 @@ import {
   MultiChoicePromptContainer,
   MultiChoicePromptContainerProps,
 } from './MultiChoicePromptContainer';
+import { MultiChoicePromptFilter } from './MultiChoicePromptFilter';
 import { MultiChoicePromptList } from './MultiChoicePromptList';
-import { MultiChoicePromptSearch } from './MultiChoicePromptSearch';
+import { MultiChoicePromptSubmit } from './MultiChoicePromptSubmit';
 import { NoteContainer, Note } from './Note';
 import { MultiChoicePromptContextProvider } from './context';
 
@@ -50,7 +50,6 @@ export const MultiChoice: MultiChoiceComponent = <V, In, Out>({
   renderProgress,
   resolve = identity,
 }: MultiChoiceProps<V, In, Out>): React.ReactElement | null => {
-  const components = useComponents();
   const { onCommit, value } = usePromptContext();
 
   const handleSubmit = React.useCallback(
@@ -78,7 +77,7 @@ export const MultiChoice: MultiChoiceComponent = <V, In, Out>({
       <Resolvables
         fallback={() => (
           <MultiChoicePromptContainer as={as}>
-            {renderProgress?.() ?? <PromptProgress />}
+            {renderProgress?.() ?? <Progress />}
           </MultiChoicePromptContainer>
         )}
         input={value}
@@ -93,7 +92,7 @@ export const MultiChoice: MultiChoiceComponent = <V, In, Out>({
             choices={results.choices}
             onSubmit={handleSubmit}
           >
-            <MultiChoicePromptContainer as={as}>
+            <MultiChoicePromptContainer as={as} ready>
               {results.render ?? (
                 <>
                   {results.message && (
@@ -102,35 +101,27 @@ export const MultiChoice: MultiChoiceComponent = <V, In, Out>({
                       <NoteContainer>
                         {results.message}
                         <Note>
-                          (
-                          <span title="Shift + Return">
-                            <code>⇧</code> + <code>⏎</code>
-                          </span>{' '}
-                          to submit)
+                          (<kbd>Shift</kbd> + <kbd>Enter</kbd> to submit)
                         </Note>
                       </NoteContainer>
                     </PromptMessage>
                   )}
-                  <CmdTokenGroup as={components.TokenGroup}>
-                    <DismissibleTokens as={components.Token} />
-                    <MultiChoicePromptSearch />
-                  </CmdTokenGroup>
+                  <TokenField>
+                    <Tokens />
+                    <MultiChoicePromptFilter />
+                    <MultiChoicePromptSubmit />
+                  </TokenField>
                   <MultiChoicePromptList>
                     {({ focused, item, onSelect, selected }) => (
-                      <CmdListItem
-                        as={components.Option}
-                        focused={focused}
+                      <Option
                         id={item.id}
                         label={item.label}
                         onSelect={onSelect}
+                        selected={focused}
                       >
                         <MultiChoicePromptCheckbox checked={selected} />
-                        <CmdHighlighted
-                          as={components.Mark}
-                          label={item.label}
-                          matches={item.matches}
-                        />
-                      </CmdListItem>
+                        <Mark label={item.label} matches={item.matches} />
+                      </Option>
                     )}
                   </MultiChoicePromptList>
                 </>

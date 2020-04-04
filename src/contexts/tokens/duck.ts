@@ -4,6 +4,7 @@ import { circularClamp } from '../../utils/circularClamp';
 
 enum ActionType {
   Add = 'ADD',
+  Clear = 'CLEAR',
   MoveFocus = 'MOVE_FOCUS',
   Remove = 'REMOVE',
   Toggle = 'TOGGLE',
@@ -13,6 +14,7 @@ enum ActionType {
 type DeltaOrIndex = { delta: number } | { index: number };
 
 type AddAction = Action<ActionType.Add, Token>;
+type ClearAction = Action<ActionType.Clear>;
 type MoveFocusAction = Action<ActionType.MoveFocus, DeltaOrIndex>;
 type RemoveAction = Action<ActionType.Remove, DeltaOrIndex>;
 type ToggleAction = Action<ActionType.Toggle, Token>;
@@ -20,6 +22,7 @@ type UnfocusAction = Action<ActionType.Unfocus>;
 
 export type Actions =
   | AddAction
+  | ClearAction
   | MoveFocusAction
   | RemoveAction
   | ToggleAction
@@ -49,6 +52,10 @@ export const init = (tokens: readonly Token[]): State => {
 export const add = (token: Token): AddAction => ({
   type: ActionType.Add,
   payload: token,
+});
+
+export const clear = (): ClearAction => ({
+  type: ActionType.Clear,
 });
 
 export const moveFocus = (payload: DeltaOrIndex): MoveFocusAction => ({
@@ -100,11 +107,11 @@ export const reducer = (state: State, action: Actions): State => {
       return {
         ...state,
         tokens: [...state.tokens, action.payload],
-        // TODO: experiment
-        // tokens: [...state.tokens, action.payload].sort(
-        //   (a, b) => a.realIndex - b.realIndex,
-        // ),
       };
+    }
+
+    case ActionType.Clear: {
+      return init([]);
     }
 
     case ActionType.MoveFocus: {

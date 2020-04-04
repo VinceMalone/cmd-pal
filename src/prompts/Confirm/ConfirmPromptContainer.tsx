@@ -1,24 +1,22 @@
 import * as React from 'react';
 
-import { CmdContainer, CmdContainerProps } from '../../components/CmdContainer';
-import { useComponents } from '../../contexts/components';
+import { Dialog, DialogProps } from '../../components/base/Dialog';
 import { usePromptContext } from '../../contexts/prompt';
 import { useAutoFocus } from '../../utils/useAutoFocus';
 
 import { useConfirmPromptContext } from './context';
 
 export interface ConfirmPromptContainerProps {
-  as?: CmdContainerProps['as'];
+  as?: DialogProps['as'];
   children?: React.ReactNode;
   onKeyDown?(evt: React.KeyboardEvent<HTMLElement>): void;
 }
 
 export const ConfirmPromptContainer: React.FC<ConfirmPromptContainerProps> = ({
-  as: As,
+  as,
   children,
   onKeyDown,
 }) => {
-  const { Surround } = useComponents();
   const { onExit } = usePromptContext();
 
   const containerRef = React.useRef<HTMLElement>(null);
@@ -40,14 +38,9 @@ export const ConfirmPromptContainer: React.FC<ConfirmPromptContainerProps> = ({
   );
 
   return (
-    <CmdContainer
-      as={As ?? Surround}
-      onKeyDown={handleKeyDown}
-      onOutsideClick={onExit}
-      ref={containerRef}
-    >
+    <Dialog as={as} onKeyDown={handleKeyDown} ref={containerRef}>
       {children}
-    </CmdContainer>
+    </Dialog>
   );
 };
 

@@ -1,19 +1,8 @@
-import * as React from 'react';
+/**
+ * TODO:
+ * remove this file and use `./base/Paragraph`
+ */
 
-import { useComponents } from '../contexts/components';
+import { Paragraph, ParagraphProps } from './base/Paragraph';
 
-export interface PromptMessageProps {
-  as?: React.ComponentType<{
-    children?: React.ReactNode;
-  }>;
-  children?: React.ReactNode;
-}
-
-export const PromptMessage: React.FC<PromptMessageProps> = ({
-  as,
-  children,
-}) => {
-  const components = useComponents();
-  const Message = as ?? components.Message ?? 'div';
-  return <Message>{children}</Message>;
-};
+export { Paragraph as PromptMessage, ParagraphProps as PromptMessageProps };

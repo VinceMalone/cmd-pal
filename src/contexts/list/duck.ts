@@ -2,7 +2,6 @@ import { Action } from '../../types/Action';
 import { Item, ListItem } from '../../types/List';
 import { circularClamp } from '../../utils/circularClamp';
 import { createDomId } from '../../utils/domId';
-import { searchItems } from '../../utils/searchItems';
 
 /**
  * TODO:
@@ -19,7 +18,9 @@ enum ActionType {
   SetItems = 'SET_ITEMS',
 }
 
-type MoveFocusAction = Action<ActionType.MoveFocus, number>;
+type DeltaOrIndex = { delta: number } | { index: number };
+
+type MoveFocusAction = Action<ActionType.MoveFocus, DeltaOrIndex>;
 type ResetAction = Action<ActionType.Reset>;
 type SearchAction = Action<ActionType.Search, string>;
 type SetItemsAction = Action<ActionType.SetItems, Item[]>;
@@ -30,48 +31,53 @@ export type Actions =
   | SearchAction
   | SetItemsAction;
 
-const getActiveDescendant = (items: ListItem[], focusedIndex: number) =>
-  items[focusedIndex] == null ? undefined : items[focusedIndex].id;
+const getActiveDescendant = (
+  items: readonly ListItem[],
+  focusedIndex: number,
+) => (items[focusedIndex] == null ? undefined : items[focusedIndex].id);
 
 const toSearchableItem = (item: Item, index: number): ListItem => ({
   ...item,
   id: createDomId('list-item'),
-  // realIndex: index, // TODO
   matches: [],
+  ordinal: index,
 });
 
-const wrapIndex = (index: number, length: number) =>
+const wrapIndex = (index: number, length: number): number =>
   circularClamp(index, 0, length);
 
 export interface State<T extends ListItem = ListItem> {
   activeDescendant: string | undefined;
-  allItems: T[];
+  allItems: readonly T[];
+  filterStrategy(items: readonly Item[], filter: string): readonly T[];
   focusedIndex: number;
-  items: T[];
+  items: readonly T[];
   searchQuery: string;
 }
 
 export const init = (payload: {
+  filterStrategy(items: readonly Item[], filter: string): readonly ListItem[];
   items: readonly Item[];
   searchQuery: string;
 }): State => {
   // TODO: is `setItems` needed now?
   const allItems = payload.items.map(toSearchableItem);
-  const items = searchItems(allItems, payload.searchQuery);
+  const items = payload.filterStrategy(allItems, payload.searchQuery);
   const focusedIndex = 0;
 
   return {
     activeDescendant: getActiveDescendant(items, focusedIndex),
     allItems,
+    filterStrategy: payload.filterStrategy,
     focusedIndex,
     items,
     searchQuery: payload.searchQuery,
   };
 };
 
-export const moveFocus = (delta: number): MoveFocusAction => ({
+export const moveFocus = (payload: DeltaOrIndex): MoveFocusAction => ({
   type: ActionType.MoveFocus,
-  payload: delta,
+  payload,
 });
 
 export const reset = (): ResetAction => ({
@@ -91,10 +97,12 @@ export const setItems = (items: Item[]): SetItemsAction => ({
 export const reducer = (state: State, action: Actions): State => {
   switch (action.type) {
     case ActionType.MoveFocus: {
-      const focusedIndex = wrapIndex(
-        state.focusedIndex + action.payload,
-        state.items.length,
-      );
+      const index =
+        'delta' in action.payload
+          ? action.payload.delta + state.focusedIndex
+          : action.payload.index;
+
+      const focusedIndex = wrapIndex(index, state.items.length);
       const activeDescendant = getActiveDescendant(state.items, focusedIndex);
 
       return {
@@ -119,7 +127,7 @@ export const reducer = (state: State, action: Actions): State => {
 
     case ActionType.Search: {
       const searchQuery = action.payload;
-      const items = searchItems(state.allItems, searchQuery);
+      const items = state.filterStrategy(state.allItems, searchQuery);
       // Don't reset the focused index if the search query didn't change the results
       const focusedIndex = items !== state.items ? 0 : state.focusedIndex;
 
@@ -134,7 +142,7 @@ export const reducer = (state: State, action: Actions): State => {
 
     case ActionType.SetItems: {
       const allItems = action.payload.map(toSearchableItem);
-      const items = searchItems(allItems, state.searchQuery);
+      const items = state.filterStrategy(allItems, state.searchQuery);
       const focusedIndex = 0;
 
       return {

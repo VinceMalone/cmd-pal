@@ -1,13 +1,19 @@
 import * as React from 'react';
 
-import { InputToken } from '../../components/InputToken';
+import {
+  TextboxToken,
+  TextboxTokenProps,
+} from '../../components/base/TextboxToken';
 import { add, moveFocus, useTokensContext } from '../../contexts/tokens';
 
 import { useListPromptContext } from './context';
 
-export interface ListPromptTextInputProps {}
+export interface ListPromptTextInputProps
+  extends Pick<TextboxTokenProps, 'as'> {}
 
-export const ListPromptTextInput: React.FC<ListPromptTextInputProps> = () => {
+export const ListPromptTextInput: React.FC<ListPromptTextInputProps> = ({
+  as,
+}) => {
   const { dispatch } = useTokensContext();
   const { submit } = useListPromptContext();
 
@@ -32,7 +38,8 @@ export const ListPromptTextInput: React.FC<ListPromptTextInputProps> = () => {
   };
 
   return (
-    <InputToken
+    <TextboxToken
+      as={as}
       onArrowDown={evt => handleArrowY(evt, 1)}
       onArrowUp={evt => handleArrowY(evt, -1)}
       onChange={setValue}

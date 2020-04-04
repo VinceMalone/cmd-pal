@@ -9,8 +9,4 @@ export const NoteContainer = styled.div`
 export const Note = styled.div`
   font-size: 0.75em;
   text-align: end;
-
-  code {
-    font-size: larger;
-  }
 `;

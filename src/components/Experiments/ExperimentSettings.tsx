@@ -82,7 +82,7 @@ export interface ExperimentSettingsProps {
 
 export const ExperimentSettings: React.FC<ExperimentSettingsProps> = ({
   defaultOpened = false,
-  openOn = 'command+,',
+  openOn = 'option+,',
 }) => {
   const [opened, setOpened] = React.useState(defaultOpened);
 

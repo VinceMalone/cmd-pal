@@ -1,19 +1,17 @@
 import * as React from 'react';
 
-import { CmdInput, CmdInputProps } from '../../components/CmdInput';
-import { useComponents } from '../../contexts/components';
+import { Textbox, TextboxProps } from '../../components/base/Textbox';
 import { useAutoFocus } from '../../utils/useAutoFocus';
 
 import { useTextPromptContext } from './context';
 
-export interface TextPromptTextInputProps {
-  as?: CmdInputProps['as'];
-}
+// TODO: rename component to "TextPromptTextbox"
+
+export interface TextPromptTextInputProps extends Pick<TextboxProps, 'as'> {}
 
 export const TextPromptTextInput: React.FC<TextPromptTextInputProps> = ({
-  as: As,
+  as,
 }) => {
-  const { Input } = useComponents();
   const { initialValue, message, placeholder, submit } = useTextPromptContext();
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -31,10 +29,10 @@ export const TextPromptTextInput: React.FC<TextPromptTextInputProps> = ({
   };
 
   return (
-    <CmdInput
-      as={As ?? Input}
+    <Textbox
+      aria-label={message}
+      as={as}
       defaultValue={initialValue}
-      label={message}
       onKeyDown={handleKeyDown}
       placeholder={placeholder}
       ref={inputRef}

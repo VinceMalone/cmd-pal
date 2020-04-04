@@ -138,10 +138,27 @@ TODO - more experiments
 - Use a placeholder to indicate _filterable_
 - ❗️ Allow _jumping_ in the list
   - Paging — `PageUp` and `PageDown`
-  - Go to Top/Bottom — `⌘+↑` or `⌃+↑`
+  - Go to Top/Bottom — `⌘+↑` or `⌃+↓`
 - Consider highlighting matched text in Tokens
 - [Confirm Prompt] perhaps "Space" should _submit_ the prompt
 
 ---
 
-- Try out this API for an action that takes an _index_ or _delta_ — rather than different functions, use the following argument: `{ index: number } | { delta: number }`.
+- [x] Try out this API for an action that takes an _index_ or _delta_ — rather than different functions, use the following argument: `{ index: number } | { delta: number }`.
+
+---
+
+## TODO
+
+- [x] [Bug] When token is focused, clicking anywhere else should focus input
+- [x] [Bug] Clicking a list-item should move focus
+- [x] [Experiment] Clear filter after selecting
+- [x] [Experiment] Use other modifiers to submit (such as `⌘`)
+- [ ] [Experiment] Visible _submit button_
+- [ ] [Experiment] `⌘+A` — filter, filter + tokens, filter > tokens
+- [ ] [Experiment] Scroll list to keep newly selected item in same position (when token group grows in height)
+- [x] [Feature] `Tab` through tokens
+- [x] [feature] Better filter algorithm
+- [x] [Feature] Jump list items: `⌘+Arrow(Up|Down)` jump to top/bottom of list
+- [x] [Feature] Jump list items: `Page(Up|Down)` jump to item _on next page_
+- [ ] [Theme] `max-height` on token group

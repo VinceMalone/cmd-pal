@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { PromptMessage } from '../../components/PromptMessage';
-import { PromptProgress } from '../../components/PromptProgress';
 import { Resolvables } from '../../components/Resolvables';
+import { Progress } from '../../components/base/Progress';
 import { usePromptContext } from '../../contexts/prompt';
 import { PromptProps } from '../../types/PromptProps';
 import { Resolvable } from '../../types/Resolvable';
@@ -65,7 +65,7 @@ export const Text: TextComponent = ({
       <Resolvables
         fallback={() => (
           <TextPromptContainer as={as}>
-            {renderProgress?.() ?? <PromptProgress />}
+            {renderProgress?.() ?? <Progress />}
           </TextPromptContainer>
         )}
         input={value}

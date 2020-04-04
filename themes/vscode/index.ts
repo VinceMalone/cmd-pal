@@ -1,5 +1,7 @@
+import { VisualCheckbox as Checkbox } from './Checkbox';
 import { HelpText } from './HelpText';
 import { Input } from './Input';
+import { InputToken } from './InputToken';
 import { Item as Option } from './Item'; // TODO
 import { List } from './List';
 import { Mark } from './Mark';
@@ -8,11 +10,12 @@ import { Progress } from './Progress';
 import { Surround } from './Surround';
 import { Token } from './Token';
 import { TokenGroup } from './TokenGroup';
-import { TokenInput } from './TokenInput';
 
 export const components = {
+  Checkbox,
   HelpText,
   Input,
+  InputToken,
   List,
   Mark,
   Message,
@@ -21,7 +24,6 @@ export const components = {
   Surround,
   Token,
   TokenGroup,
-  TokenInput,
 };
 
 export const theme = {

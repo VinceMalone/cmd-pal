@@ -1,39 +1,39 @@
 import * as React from 'react';
 
 import {
-  ChoiceMenuList,
-  ChoiceMenuListProps,
-  RenderItemProps,
-} from '../../components/ChoiceMenuList';
-import { useComponents } from '../../contexts/components';
-import { toggle, useTokensContext } from '../../contexts/tokens';
-import { ChoiceListItem } from '../../types/Choice';
+  OptionList,
+  OptionListItemProps,
+  OptionListProps,
+} from '../../components/base/OptionList';
+import { useTokensContext } from '../../contexts/tokens';
 
-export interface MultiChoicePromptListProps
-  extends Omit<ChoiceMenuListProps, 'children' | 'onSelect'> {
-  children(props: RenderItemProps & { selected: boolean }): React.ReactElement;
+import { useToggleItem } from './useToggleItem';
+
+export interface RenderItemProps extends OptionListItemProps {
+  selected: boolean;
+}
+
+type PassThroughProps = Pick<OptionListProps, 'as' | 'emptyLabel'>;
+export interface MultiChoicePromptListProps extends PassThroughProps {
+  children(props: RenderItemProps): React.ReactElement;
 }
 
 export const MultiChoicePromptList: React.FC<MultiChoicePromptListProps> = ({
-  as: As,
+  as,
   children,
-  ...props
+  emptyLabel,
 }) => {
-  const { List } = useComponents();
-  const { dispatch, state } = useTokensContext();
-
-  const handleSelect = React.useCallback(
-    (item: ChoiceListItem) => dispatch(toggle(item)),
-    [dispatch],
-  );
+  const toggleItem = useToggleItem();
+  const { state } = useTokensContext();
+  const { tokens } = state;
 
   const selectedSet = React.useMemo(
-    () => new Set(state.tokens.map(token => token.id)),
-    [state.tokens],
+    () => new Set(tokens.map(token => token.id)),
+    [tokens],
   );
 
   return (
-    <ChoiceMenuList {...props} as={As ?? List} onSelect={handleSelect}>
+    <OptionList as={as} emptyLabel={emptyLabel} onSelect={toggleItem}>
       {({ focused, item, onSelect }) =>
         children({
           // Don't render item as focused if a token is focused
@@ -43,6 +43,6 @@ export const MultiChoicePromptList: React.FC<MultiChoicePromptListProps> = ({
           selected: selectedSet.has(item.id),
         })
       }
-    </ChoiceMenuList>
+    </OptionList>
   );
 };

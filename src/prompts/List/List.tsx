@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import { CmdTokenGroup } from '../../components/CmdTokenGroup';
-import { DismissibleTokens } from '../../components/DismissibleTokens';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { PromptMessage } from '../../components/PromptMessage';
-import { PromptProgress } from '../../components/PromptProgress';
 import { Resolvables } from '../../components/Resolvables';
-import { useComponents } from '../../contexts/components';
+import { Progress } from '../../components/base/Progress';
+import { Tokens } from '../../components/base/Token';
+import { TokenField } from '../../components/base/TokenField';
 import { usePromptContext } from '../../contexts/prompt';
 import { PromptProps } from '../../types/PromptProps';
 import { Resolvable } from '../../types/Resolvable';
@@ -43,7 +42,6 @@ export const List: ListComponent = ({
   renderProgress,
   resolve = identity,
 }) => {
-  const components = useComponents();
   const { onCommit, value } = usePromptContext();
 
   const handleSubmit = React.useCallback(
@@ -67,7 +65,7 @@ export const List: ListComponent = ({
       <Resolvables
         fallback={() => (
           <ListPromptContainer as={as}>
-            {renderProgress?.() ?? <PromptProgress />}
+            {renderProgress?.() ?? <Progress />}
           </ListPromptContainer>
         )}
         input={value}
@@ -88,10 +86,10 @@ export const List: ListComponent = ({
                   {results.message && (
                     <PromptMessage>{results.message}</PromptMessage>
                   )}
-                  <CmdTokenGroup as={components.TokenGroup}>
-                    <DismissibleTokens as={components.Token} />
+                  <TokenField>
+                    <Tokens />
                     <ListPromptTextInput />
-                  </CmdTokenGroup>
+                  </TokenField>
                 </>
               )}
             </ListPromptContainer>
