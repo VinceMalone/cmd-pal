@@ -6,7 +6,9 @@ import { useMeasure } from 'react-use';
 import styled from 'styled-components';
 
 import { useComponent } from '../../contexts/components';
+import { useTokensContext } from '../../contexts/tokens';
 import { Token as TokenBox } from '../../types/Token';
+import { useAutoFocus } from '../../utils/useAutoFocus';
 
 import { gapProp } from './TokenField';
 import { useTextboxTokenProps } from './useMoveThisSomewhere';
@@ -111,10 +113,49 @@ export interface TextboxTokenProps
   value: string;
 }
 
-export const TextboxToken: React.FC<TextboxTokenProps> = props => {
+export const TextboxToken: React.FC<TextboxTokenProps> = ({
+  as,
+  focused,
+  value,
+
+  onArrowDown,
+  onArrowUp,
+  onChange,
+  onPageDown,
+  onPageUp,
+  onSelect,
+  onSubmit,
+  ...props
+}) => {
+  const { state } = useTokensContext();
+
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const moreprops = useTextboxTokenProps(props, inputRef);
+  useAutoFocus(inputRef, true);
+
+  const moreprops = useTextboxTokenProps(
+    {
+      onArrowDown,
+      onArrowUp,
+      onChange,
+      onPageDown,
+      onPageUp,
+      onSelect,
+      onSubmit,
+      value,
+    },
+    inputRef,
+  );
+  console.log('focused', focused);
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
-  return <Todo_TextboxToken {...props} {...moreprops} ref={inputRef} />;
+  return (
+    <Todo_TextboxToken
+      {...props}
+      {...moreprops}
+      as={as}
+      focused={state.focusedIndex === -1}
+      ref={inputRef}
+      value={value}
+    />
+  );
 };

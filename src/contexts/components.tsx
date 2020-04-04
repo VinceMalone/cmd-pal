@@ -49,6 +49,7 @@ export function useComponent<T extends keyof Components>(
   fallback?: Components[T],
 ) {
   const components = useComponents();
+  // @ts-ignore
   return as ?? components[name] ?? fallback;
 }
 

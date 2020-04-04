@@ -25,6 +25,7 @@ export const VisualCheckbox: React.FC<VisualCheckboxProps> = ({
   as,
   checked = false,
 }) => {
-  const { Checkbox = as ?? DefaultCheckbox } = useComponents();
+  // const { Checkbox = as ?? DefaultCheckbox } = useComponents();
+  const Checkbox = DefaultCheckbox; // TODO...
   return <Checkbox checked={checked} />;
 };

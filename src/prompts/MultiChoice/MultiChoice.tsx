@@ -109,7 +109,6 @@ export const MultiChoice: MultiChoiceComponent = <V, In, Out>({
                   <TokenField>
                     <Tokens />
                     <MultiChoicePromptFilter />
-                    <MultiChoicePromptSubmit />
                   </TokenField>
                   <MultiChoicePromptList>
                     {({ focused, item, onSelect, selected }) => (
