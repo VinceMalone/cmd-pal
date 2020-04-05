@@ -30,7 +30,7 @@ export interface State {
 
 export const init = (pipe: Pipe): State => ({
   currentIndex: 0,
-  isOpen: false,
+  isOpen: true,
   isPending: false,
   pendingSummary: '',
   pipe,
