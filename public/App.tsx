@@ -4,8 +4,8 @@ import { Palette, PaletteProps } from '../src/Palette';
 // TODO: ensures the [base] prompt styles are imported before theme styles
 import '../src/prompts/Confirm';
 import '../src/prompts/List';
-import '../src/prompts/MultiChoice';
-import '../src/prompts/SingleChoice';
+import '../src/prompts/MultiOption';
+import '../src/prompts/SingleOption';
 import '../src/prompts/Text';
 import { ResolvableComponent } from '../src/types/ResolvableComponent';
 import * as vscode from '../themes/vscode';

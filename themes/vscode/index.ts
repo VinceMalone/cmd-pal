@@ -1,36 +1,44 @@
-import { VisualCheckbox as Checkbox } from './Checkbox';
-import { HelpText } from './HelpText';
-import { Input } from './Input';
-import { InputToken } from './InputToken';
-import { Item as Option } from './Item'; // TODO
-import { List } from './List';
+import { Button } from './Button';
+import { ButtonGroup } from './ButtonGroup';
+import { Dialog } from './Dialog';
+import { Header } from './Header';
+import { Hint } from './Hint';
+import { Kbd } from './Kbd';
 import { Mark } from './Mark';
 import { Message } from './Message';
-import { Progress } from './Progress';
-import { Surround } from './Surround';
+import { Option } from './Option';
+import { OptionList } from './OptionList';
+import { Paragraph } from './Paragraph';
+import { Textbox } from './Textbox';
 import { Token } from './Token';
-import { TokenGroup } from './TokenGroup';
+import { TokenField } from './TokenField';
+import { VisualCheckbox } from './VisualCheckbox';
 
 export const components = {
-  Checkbox,
-  HelpText,
-  Input,
-  InputToken,
-  List,
+  Button,
+  Dialog,
+  Header,
+  Hint,
+  Kbd,
   Mark,
   Message,
   Option,
-  Progress,
-  Surround,
+  OptionList,
+  Paragraph,
+  Textbox,
   Token,
-  TokenGroup,
+  TokenField,
+
+  // Confirm
+  ConfirmPromptButtonGroup: ButtonGroup,
+
+  // MultiOption
+  MultiOptionPromptCheckbox: VisualCheckbox,
 };
 
 export const theme = {
-  maxHeight: '4rem',
   maxWidth: '37.5rem',
   offsetTop: '2rem',
   offsetSides: '2rem',
-  progressOffset: '1rem',
   zIndex: 999999,
 };

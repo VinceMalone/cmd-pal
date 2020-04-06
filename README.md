@@ -1,8 +1,8 @@
 # Prompts
 
 - text
-- single-choice
-- multi-choice
+- single-option
+- multi-option
 - confirm
 
 ## Future
@@ -22,7 +22,7 @@
 
 - how far can/should I go for having compound components?
 - how shitty is the `pipe` prop?
-- what's the semantic and API difference between a "choice list" and a "command list"?
+- what's the semantic and API difference between a "option list" and a "command list"?
 
 ---
 

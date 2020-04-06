@@ -1,12 +1,8 @@
 import * as React from 'react';
-import styled from 'styled-components';
+
+import { useComponent } from '../../contexts/components';
 
 import { useConfirmPromptContext } from './context';
-
-const Button = styled.button<{ focused: boolean }>`
-  margin: 2px;
-  outline: ${props => (props.focused ? 'black dotted 1px' : '')};
-`;
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   focused: boolean;
@@ -25,11 +21,11 @@ const createConfirmButton = (
     as,
     children = defaultChildren,
   }: ConfirmButtonProps) {
+    const Button = useComponent('Button', as, 'button');
     const { confirmed, setConfirmed, submit } = useConfirmPromptContext();
 
     return (
       <Button
-        as={as}
         focused={confirmed === value}
         onClick={() => {
           setConfirmed(value);

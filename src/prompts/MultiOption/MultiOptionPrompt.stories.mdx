@@ -1,0 +1,62 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { ThemeProvider } from 'styled-components';
+
+import '../../../src/prompts/Confirm';
+import '../../../src/prompts/List';
+import '../../../src/prompts/MultiOption';
+import '../../../src/prompts/SingleOption';
+import '../../../src/prompts/Text';
+
+import listings from '../../../data/netflix_titles.json';
+import * as vscode from '../../../themes/vscode';
+import { ComponentsProvider } from '../../contexts/components';
+
+import { MultiOption } from './MultiOption';
+
+<Meta title="MultiOption" component={MultiOption} />
+
+# MultiOption
+
+TODO
+
+<Preview>
+  <Story name="Empty">
+    <MultiOption options={[]} />
+  </Story>
+</Preview>
+
+---
+
+<Preview>
+  <Story name="With Options">
+    <MultiOption
+      message="Choose your favorite movies"
+      options={listings
+        .map(listing => listing.title)
+        .sort()
+        .map(title => ({
+          label: title,
+          resolve: title,
+        }))}
+    />
+  </Story>
+</Preview>
+
+---
+
+<Preview>
+  <Story name="Themed">
+    <ComponentsProvider components={vscode.components}>
+      <MultiOption
+        message="Choose your favorite movies"
+        options={listings
+          .map(listing => listing.title)
+          .sort()
+          .map(title => ({
+            label: title,
+            resolve: title,
+          }))}
+      />
+    </ComponentsProvider>
+  </Story>
+</Preview>

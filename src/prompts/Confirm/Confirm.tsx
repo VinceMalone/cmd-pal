@@ -1,9 +1,10 @@
 import * as React from 'react';
-import styled from 'styled-components';
 
 import { ErrorBoundary } from '../../components/ErrorBoundary';
-import { PromptMessage } from '../../components/PromptMessage';
 import { Resolvables } from '../../components/Resolvables';
+import { ErrorMessage } from '../../components/base/ErrorMessage';
+import { Header } from '../../components/base/Header';
+import { Message } from '../../components/base/Message';
 import { Progress } from '../../components/base/Progress';
 import { usePromptContext } from '../../contexts/prompt';
 import { PromptProps } from '../../types/PromptProps';
@@ -11,22 +12,18 @@ import { Resolvable } from '../../types/Resolvable';
 import { call } from '../../utils/call';
 
 import { ConfirmButtonNo, ConfirmButtonYes } from './ConfirmButton';
+import { ConfirmPromptButtonGroup } from './ConfirmPromptButtonGroup';
 import {
-  ConfirmPromptContainer,
-  ConfirmPromptContainerProps,
-  ConfirmPromptContainerReady,
-} from './ConfirmPromptContainer';
+  ConfirmPromptDialog,
+  ConfirmPromptDialogProps,
+} from './ConfirmPromptDialog';
 import { ConfirmPromptContextProvider } from './context';
-
-const ButtonGroup = styled.div`
-  box-sizing: border-box;
-  padding: 4px;
-`;
 
 const identity = <I, O>(x: I): O => (x as unknown) as O;
 
-export interface ConfirmProps<In, Out> extends PromptProps<boolean, In, Out> {
-  as?: ConfirmPromptContainerProps['as'];
+export interface ConfirmProps<In, Out>
+  extends PromptProps<boolean, In, Out>,
+    Pick<ConfirmPromptDialogProps, 'as'> {
   initialValue?: Resolvable<boolean, [In]>;
   message?: Resolvable<string, [In]>;
   render?: Resolvable<React.ReactNode, [In]>;
@@ -60,18 +57,16 @@ export const Confirm: ConfirmComponent = ({
   return (
     <ErrorBoundary
       fallback={error => (
-        <ConfirmPromptContainer as={as}>
-          {renderError?.(error) ?? (
-            <PromptMessage>{error.message}</PromptMessage>
-          )}
-        </ConfirmPromptContainer>
+        <ConfirmPromptDialog as={as}>
+          {renderError?.(error) ?? <ErrorMessage>{error.message}</ErrorMessage>}
+        </ConfirmPromptDialog>
       )}
     >
       <Resolvables
         fallback={() => (
-          <ConfirmPromptContainer as={as}>
+          <ConfirmPromptDialog as={as}>
             {renderProgress?.() ?? <Progress />}
-          </ConfirmPromptContainer>
+          </ConfirmPromptDialog>
         )}
         input={value}
         resolvables={{
@@ -85,19 +80,18 @@ export const Confirm: ConfirmComponent = ({
             initialValue={results.initialValue}
             onSubmit={handleSubmit}
           >
-            <ConfirmPromptContainerReady as={as}>
+            <ConfirmPromptDialog as={as} ready>
               {results.render ?? (
                 <>
-                  {results.message && (
-                    <PromptMessage>{results.message}</PromptMessage>
-                  )}
-                  <ButtonGroup>
-                    <ConfirmButtonYes />
-                    <ConfirmButtonNo />
-                  </ButtonGroup>
+                  <Header>
+                    {results.message && <Message>{results.message}</Message>}
+                  </Header>
+                  <ConfirmPromptButtonGroup>
+                    <ConfirmButtonYes /> <ConfirmButtonNo />
+                  </ConfirmPromptButtonGroup>
                 </>
               )}
-            </ConfirmPromptContainerReady>
+            </ConfirmPromptDialog>
           </ConfirmPromptContextProvider>
         )}
       </Resolvables>

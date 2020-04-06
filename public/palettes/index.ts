@@ -6,14 +6,14 @@ faker.seed(1);
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-const choices = Array.from({ length: 2000 }, () => ({
+const options = Array.from({ length: 2000 }, () => ({
   label: faker.company.catchPhrase(),
   resolve: faker.random.uuid(),
 }));
 
 export const commands = [
-  Prompts.SingleChoice({
-    choices: choices.map(({ label, resolve }) => ({
+  Prompts.SingleOption({
+    options: options.map(({ label, resolve }) => ({
       label,
       resolve: async () => {
         await wait(800);
@@ -24,9 +24,9 @@ export const commands = [
 ];
 
 export const workflow = [
-  Prompts.SingleChoice({
-    choices,
+  Prompts.SingleOption({
     message: 'Select... one',
+    options: options,
   }),
   Prompts.Text({
     // initialValue: "const reallyReally = !!'!!!';",
@@ -58,8 +58,8 @@ export { list } from './list';
 //
 
 export const multi = [
-  Prompts.MultiChoice({
-    choices,
+  Prompts.MultiOption({
+    options,
     message: 'Select one or more',
     resolve: console.log,
   }),
@@ -95,10 +95,10 @@ const getBranchNames = async () => {
 };
 
 export const todo = [
-  Prompts.SingleChoice({
+  Prompts.SingleOption({
     message: 'Choose a branch',
     resolve: branchName => console.log('Selected Branch:', branchName),
-    choices: async () => {
+    options: async () => {
       const branches = await getBranchNames();
       console.log('branches', branches);
       return [

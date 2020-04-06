@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { useComponent } from '../../contexts/components';
 import { moveFocus, useListContext } from '../../contexts/list';
-import { ChoiceListItem as OptionListItem } from '../../types/Choice';
+import { OptionListItem } from '../../types/Option';
 import { useDomId } from '../../utils/domId';
 import { Measure } from '../Measure';
 import { VirtualItems } from '../VirtualItems';

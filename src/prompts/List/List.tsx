@@ -1,8 +1,10 @@
 import * as React from 'react';
 
 import { ErrorBoundary } from '../../components/ErrorBoundary';
-import { PromptMessage } from '../../components/PromptMessage';
 import { Resolvables } from '../../components/Resolvables';
+import { ErrorMessage } from '../../components/base/ErrorMessage';
+import { Header } from '../../components/base/Header';
+import { Message } from '../../components/base/Message';
 import { Progress } from '../../components/base/Progress';
 import { Tokens } from '../../components/base/Token';
 import { TokenField } from '../../components/base/TokenField';
@@ -11,17 +13,15 @@ import { PromptProps } from '../../types/PromptProps';
 import { Resolvable } from '../../types/Resolvable';
 import { call } from '../../utils/call';
 
-import {
-  ListPromptContainer,
-  ListPromptContainerProps,
-} from './ListPromptContainer';
-import { ListPromptTextInput } from './ListPromptTextInput';
+import { ListPromptDialog, ListPromptDialogProps } from './ListPromptDialog';
+import { ListPromptTextbox } from './ListPromptTextbox';
 import { ListPromptContextProvider } from './context';
 
 const identity = <I, O>(x: I): O => (x as unknown) as O;
 
-export interface ListProps<In, Out> extends PromptProps<string[], In, Out> {
-  as?: ListPromptContainerProps['as'];
+export interface ListProps<In, Out>
+  extends PromptProps<string[], In, Out>,
+    Pick<ListPromptDialogProps, 'as'> {
   initialValue?: Resolvable<readonly string[], [In]>;
   message?: Resolvable<string, [In]>;
   render?: Resolvable<React.ReactNode, [In]>;
@@ -55,18 +55,16 @@ export const List: ListComponent = ({
   return (
     <ErrorBoundary
       fallback={error => (
-        <ListPromptContainer as={as}>
-          {renderError?.(error) ?? (
-            <PromptMessage>{error.message}</PromptMessage>
-          )}
-        </ListPromptContainer>
+        <ListPromptDialog as={as}>
+          {renderError?.(error) ?? <ErrorMessage>{error.message}</ErrorMessage>}
+        </ListPromptDialog>
       )}
     >
       <Resolvables
         fallback={() => (
-          <ListPromptContainer as={as}>
+          <ListPromptDialog as={as}>
             {renderProgress?.() ?? <Progress />}
-          </ListPromptContainer>
+          </ListPromptDialog>
         )}
         input={value}
         resolvables={{
@@ -80,19 +78,19 @@ export const List: ListComponent = ({
             initialValue={results.initialValue}
             onSubmit={handleSubmit}
           >
-            <ListPromptContainer as={as}>
+            <ListPromptDialog as={as}>
               {render ?? (
                 <>
-                  {results.message && (
-                    <PromptMessage>{results.message}</PromptMessage>
-                  )}
+                  <Header>
+                    {results.message && <Message>{results.message}</Message>}
+                  </Header>
                   <TokenField>
                     <Tokens />
-                    <ListPromptTextInput />
+                    <ListPromptTextbox />
                   </TokenField>
                 </>
               )}
-            </ListPromptContainer>
+            </ListPromptDialog>
           </ListPromptContextProvider>
         )}
       </Resolvables>
