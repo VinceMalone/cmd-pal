@@ -11,7 +11,7 @@ import { PromptProps } from '../../types/PromptProps';
 import { Resolvable } from '../../types/Resolvable';
 import { call } from '../../utils/call';
 
-import { ConfirmButtonNo, ConfirmButtonYes } from './ConfirmButton';
+import { ConfirmButtonNo, ConfirmButtonYes } from './ConfirmPromptButton';
 import { ConfirmPromptButtonGroup } from './ConfirmPromptButtonGroup';
 import {
   ConfirmPromptDialog,

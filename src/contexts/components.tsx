@@ -17,6 +17,7 @@ import { TextboxTokenComponent } from '../components/base/TextboxToken';
 import { TokenComponent } from '../components/base/Token';
 import { TokenFieldComponent } from '../components/base/TokenField';
 // Prompt
+import { ConfirmPromptButtonComponent } from '../prompts/Confirm/ConfirmPromptButton';
 import { ConfirmPromptButtonGroupComponent } from '../prompts/Confirm/ConfirmPromptButtonGroup';
 import { MultiOptionPromptCheckboxComponent } from '../prompts/MultiOption/MultiOptionPromptCheckbox';
 import { MultiOptionPromptHintComponent } from '../prompts/MultiOption/MultiOptionPromptHint';
@@ -42,6 +43,7 @@ interface Components {
   // Prompts
 
   // Confirm
+  ConfirmPromptButton: ConfirmPromptButtonComponent;
   ConfirmPromptButtonGroup: ConfirmPromptButtonGroupComponent;
 
   // MultiOption

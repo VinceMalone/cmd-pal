@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import { useComponent } from '../../contexts/components';
 
 const DefaultButtonGroup = styled.div`
-  box-sizing: border-box;
-  padding: 4px;
+  margin: 1em 0;
 `;
 
 interface ConfirmPromptButtonGroupComponentProps {

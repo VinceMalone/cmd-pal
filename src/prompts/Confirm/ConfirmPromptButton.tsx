@@ -1,15 +1,14 @@
 import * as React from 'react';
 
+import { Button, ButtonComponent } from '../../components/base/Button';
 import { useComponent } from '../../contexts/components';
 
 import { useConfirmPromptContext } from './context';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  focused: boolean;
-}
+export type ConfirmPromptButtonComponent = ButtonComponent;
 
-interface ConfirmButtonProps {
-  as?: React.ComponentType<ButtonProps>;
+export interface ConfirmButtonProps {
+  as?: ConfirmPromptButtonComponent;
   children?: React.ReactNode;
 }
 
@@ -21,11 +20,12 @@ const createConfirmButton = (
     as,
     children = defaultChildren,
   }: ConfirmButtonProps) {
-    const Button = useComponent('Button', as, 'button');
+    const ConfirmButton = useComponent('ConfirmPromptButton', as);
     const { confirmed, setConfirmed, submit } = useConfirmPromptContext();
 
     return (
       <Button
+        as={ConfirmButton}
         focused={confirmed === value}
         onClick={() => {
           setConfirmed(value);
