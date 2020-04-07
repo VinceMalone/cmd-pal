@@ -38,11 +38,9 @@ const TokenDismissButton = styled(DismissButton)<{ focused: boolean }>`
   font-size: ${height}em;
 `;
 
-export interface TokenProps {
-  'aria-label': string;
-  children?: React.ReactNode;
+type HtmlButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+export interface TokenProps extends HtmlButtonProps {
   focused: boolean;
-  onClick?(): void;
 }
 
 export const Token: React.FC<TokenProps> = ({ children, ...props }) => {

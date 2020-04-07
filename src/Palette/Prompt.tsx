@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import * as tb from 'ts-toolbelt';
 
 import { PromptProvider } from '../contexts/prompt';
@@ -8,10 +9,14 @@ import { usePaletteContext } from './context';
 import * as duck from './duck';
 
 export interface PromptProps {
+  container?: Element;
   openOn: string;
 }
 
-export const Prompt: React.FC<PromptProps> = ({ openOn }) => {
+export const Prompt: React.FC<PromptProps> = ({
+  container = document.body,
+  openOn,
+}) => {
   const { dispatch, state } = usePaletteContext();
 
   useHotkeys(
@@ -21,14 +26,8 @@ export const Prompt: React.FC<PromptProps> = ({ openOn }) => {
 
   const handleCommit = React.useCallback(
     async (value: tb.M.Promisable<unknown>) => {
-      // if (Array.isArray(value) && value.__promptPipe) {
-      //   console.log('RECURSIVE PIPE!');
-      // }
-
       dispatch(duck.resolve('TODO: add summary to function parameters'));
       dispatch(duck.commit(await value));
-
-      // TODO: what happens when `currentIndex` is out-of-bounds?
     },
     [dispatch],
   );
@@ -53,9 +52,12 @@ export const Prompt: React.FC<PromptProps> = ({ openOn }) => {
           onExit={handleExit}
           value={state.value}
         >
-          <React.Fragment key={state.currentIndex.toString()}>
-            {state.pipe[state.currentIndex]}
-          </React.Fragment>
+          {ReactDOM.createPortal(
+            <React.Fragment key={state.currentIndex.toString()}>
+              {state.pipe[state.currentIndex]}
+            </React.Fragment>,
+            container,
+          )}
         </PromptProvider>
       )}
     </>

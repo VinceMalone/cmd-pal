@@ -40,8 +40,8 @@ export const ListPromptContextProvider: React.FC<ListPromptContextProviderProps>
 
   const tokens = React.useMemo(
     () =>
-      // TODO: dedupe?
-      initialValue?.map(value => ({
+      // Remove duplicates
+      Array.from(new Set(initialValue)).map(value => ({
         id: value,
         label: value,
       })),

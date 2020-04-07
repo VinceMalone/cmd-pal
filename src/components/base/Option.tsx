@@ -15,9 +15,9 @@ const BaseOption = styled.div`
 
 interface OptionComponentProps {
   children?: React.ReactNode;
-  id: string;
-  onClick(): void;
-  role: string;
+  id?: string;
+  onClick?(event: React.MouseEvent<HTMLElement, MouseEvent>): void;
+  role?: string;
 }
 
 export type OptionComponent = React.ElementType<OptionComponentProps>;

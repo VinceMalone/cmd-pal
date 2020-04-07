@@ -1,8 +1,7 @@
 import * as React from 'react';
 
 import { Textbox, TextboxProps } from '../../components/base/Textbox';
-import { moveFocus, search, useListContext } from '../../contexts/list';
-import { OptionListItem } from '../../types/Option';
+import { filter, moveFocus, useListContext } from '../../contexts/list';
 import { useAutoFocus } from '../../utils/useAutoFocus';
 
 import { useSingleOptionPromptContext } from './context';
@@ -14,7 +13,7 @@ export const SingleOptionPromptFilter: React.FC<SingleOptionPromptFilterProps> =
   as,
 }) => {
   const { submit } = useSingleOptionPromptContext();
-  const { dispatch, state } = useListContext<OptionListItem>();
+  const { dispatch, state } = useListContext();
   const { focusedIndex, items } = state;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -58,13 +57,13 @@ export const SingleOptionPromptFilter: React.FC<SingleOptionPromptFilterProps> =
       as={as}
       autoCorrect="off"
       autoCapitalize="off"
-      onChange={evt => dispatch(search(evt.target.value))}
+      onChange={evt => dispatch(filter(evt.target.value))}
       onKeyDown={handleKeyDown}
       placeholder="Type to narrow down results."
       ref={inputRef}
       role="combobox"
       spellCheck={false}
-      value={state.searchQuery}
+      value={state.filterTerm}
     />
   );
 };

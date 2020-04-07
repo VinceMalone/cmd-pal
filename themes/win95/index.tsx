@@ -1,7 +1,30 @@
-import styled, { css } from 'styled-components';
+import * as React from 'react';
+import styled, { createGlobalStyle, css } from 'styled-components';
 
-export const components = {
-  Dialog: styled.div`
+import { Components } from '../../src/contexts/components/type';
+
+import MSSansSerif from './MSSansSerif.woff';
+import MSSansSerif2 from './MSSansSerif.woff2';
+
+const Font = createGlobalStyle`
+  @font-face {
+    font-family: 'MS Sans Serif';
+    src: url('${MSSansSerif2}') format('woff2'),
+      url('${MSSansSerif}') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+`;
+
+export const components: Partial<Components> = {
+  Dialog: styled.div.attrs(({ children }) => ({
+    children: (
+      <>
+        <Font />
+        {children}
+      </>
+    ),
+  }))`
     background-color: rgb(206, 208, 207);
     border-left-color: rgb(255, 255, 255);
     border-top-color: rgb(255, 255, 255);
@@ -157,11 +180,4 @@ export const components = {
   TextboxToken: styled.div`
     padding: 0 8px;
   `,
-};
-
-export const theme = {
-  maxWidth: '37.5rem',
-  offsetTop: '2rem',
-  offsetSides: '2rem',
-  zIndex: 999999,
 };

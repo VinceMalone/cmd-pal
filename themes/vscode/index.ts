@@ -1,6 +1,9 @@
+import { Components } from '../../src/contexts/components/type';
+
 import { Button } from './Button';
 import { ButtonGroup } from './ButtonGroup';
 import { Dialog } from './Dialog';
+import { ErrorMessage } from './ErrorMessage';
 import { Header } from './Header';
 import { Hint } from './Hint';
 import { Kbd } from './Kbd';
@@ -9,14 +12,16 @@ import { Message } from './Message';
 import { Option } from './Option';
 import { OptionList } from './OptionList';
 import { Paragraph } from './Paragraph';
+import { Progress } from './Progress';
 import { Textbox } from './Textbox';
 import { Token } from './Token';
 import { TokenField } from './TokenField';
 import { VisualCheckbox } from './VisualCheckbox';
 
-export const components = {
+export const components: Partial<Components> = {
   Button,
   Dialog,
+  ErrorMessage,
   Header,
   Hint,
   Kbd,
@@ -25,6 +30,7 @@ export const components = {
   Option,
   OptionList,
   Paragraph,
+  Progress,
   Textbox,
   Token,
   TokenField,
@@ -34,11 +40,4 @@ export const components = {
 
   // MultiOption
   MultiOptionPromptCheckbox: VisualCheckbox,
-};
-
-export const theme = {
-  maxWidth: '37.5rem',
-  offsetTop: '2rem',
-  offsetSides: '2rem',
-  zIndex: 999999,
 };

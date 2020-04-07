@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as tb from 'ts-toolbelt';
 
-// TODO: why can't these [any] be unknown? (causes errors on `yarn start`)
+// Intentionally using `any` to avoid making the context generic
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface PromptContextValue<In = any, Out = any> {
   onCommit(value: tb.M.Promisable<Out>): Promise<void>;
   onExit(): void;

@@ -10,6 +10,7 @@ module.exports = {
   },
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
+    historyApiFallback: true,
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
@@ -25,6 +26,18 @@ module.exports = {
           },
           {
             loader: 'ts-loader',
+          },
+        ],
+      },
+      {
+        test: /\.(woff(2)?|ttf)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/',
+            },
           },
         ],
       },

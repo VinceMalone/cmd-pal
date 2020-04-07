@@ -12,7 +12,7 @@ interface ExperimentsContextValue {
 
 const ExperimentsContext = React.createContext<ExperimentsContextValue>({
   experiments,
-  set: () => undefined, // TODO
+  set: () => undefined,
 });
 
 export const useExperimentsContext = () => React.useContext(ExperimentsContext);

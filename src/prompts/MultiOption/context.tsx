@@ -45,7 +45,7 @@ export const MultiOptionPromptContextProvider: React.FC<MultiOptionPromptContext
   );
 
   return (
-    <ListProvider items={options}>
+    <ListProvider options={options}>
       <TokensProvider>
         <MultiOptionPromptContext.Provider value={context}>
           {children}

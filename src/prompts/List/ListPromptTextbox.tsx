@@ -11,8 +11,9 @@ import { useListPromptContext } from './context';
 export interface ListPromptTextboxProps extends Pick<TextboxTokenProps, 'as'> {}
 
 export const ListPromptTextbox: React.FC<ListPromptTextboxProps> = ({ as }) => {
-  const { dispatch } = useTokensContext();
   const { submit } = useListPromptContext();
+  const { dispatch, state } = useTokensContext();
+  const { tokens } = state;
 
   const [value, setValue] = React.useState('');
 
@@ -27,8 +28,8 @@ export const ListPromptTextbox: React.FC<ListPromptTextboxProps> = ({ as }) => {
   };
 
   const handleSelect = () => {
-    if (value.trim().length > 0) {
-      // TODO: handle duplicates
+    // Can't be _empty_ and won't add duplicates
+    if (value.trim().length > 0 && tokens.every(({ id }) => id !== value)) {
       dispatch(add({ id: value, label: value }));
       setValue('');
     }

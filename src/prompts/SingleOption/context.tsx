@@ -44,7 +44,7 @@ export const SingleOptionPromptContextProvider: React.FC<SingleOptionPromptConte
   );
 
   return (
-    <ListProvider items={options}>
+    <ListProvider options={options}>
       <SingleOptionPromptContext.Provider value={context}>
         {children}
       </SingleOptionPromptContext.Provider>

@@ -4,7 +4,7 @@ import {
   TextboxToken,
   TextboxTokenProps,
 } from '../../components/base/TextboxToken';
-import { moveFocus, search, useListContext } from '../../contexts/list';
+import { filter, moveFocus, useListContext } from '../../contexts/list';
 import { unfocus, useTokensContext } from '../../contexts/tokens';
 import { OptionListItem } from '../../types/Option';
 
@@ -17,7 +17,7 @@ export interface MultiOptionPromptFilterProps
 export const MultiOptionPromptFilter: React.FC<MultiOptionPromptFilterProps> = ({
   as,
 }) => {
-  const listContext = useListContext<OptionListItem>();
+  const listContext = useListContext();
   const tokensContext = useTokensContext();
   const { submit } = useMultiOptionPromptContext();
   const toggleItem = useToggleItem();
@@ -36,22 +36,8 @@ export const MultiOptionPromptFilter: React.FC<MultiOptionPromptFilterProps> = (
         evt.key === 'ArrowUp' ? 0 : listContext.state.items.length - 1;
       listContext.dispatch(moveFocus({ index }));
     } else {
-      // TODO: experiment?
-      // Should the focus always move or only when `tokensContext.state.focusedIndex === -1`?
       listContext.dispatch(moveFocus({ delta }));
     }
-  };
-
-  const handlePageDown = () => {
-    // let index = Math.floor((scrollOffset + listHeight * 1) / itemHeight) - 1;
-    // if (index === listContext.state.focusedIndex)
-    //   index = Math.floor((scrollOffset + listHeight * 2) / itemHeight) - 2;
-  };
-
-  const handlePageUp = () => {
-    // let index = Math.ceil((scrollOffset - listHeight * 0) / itemHeight) + 0;
-    // if (index === listContext.state.focusedIndex)
-    //   index = Math.ceil((scrollOffset - listHeight * 1) / itemHeight) + 1;
   };
 
   const handlePageY = (direction: 1 | -1) => {
@@ -86,20 +72,16 @@ export const MultiOptionPromptFilter: React.FC<MultiOptionPromptFilterProps> = (
 
   return (
     <TextboxToken
-      // TODO: aria-X (left over from old `MultiOptionSearch`)
-      aria-autocomplete="list" // TODO
-      aria-haspopup="true" // TODO
-      aria-label="Type to narrow down results." // TODO
+      aria-label="Type to narrow down results."
       as={as}
       onArrowDown={evt => handleArrowY(evt, 1)}
       onArrowUp={evt => handleArrowY(evt, -1)}
-      onChange={value => listContext.dispatch(search(value))}
+      onChange={value => listContext.dispatch(filter(value))}
       onPageDown={() => handlePageY(1)}
       onPageUp={() => handlePageY(-1)}
       onSelect={handleSelect}
-      // onSubmit={submit} // TODO: is the below ok?
-      onSubmit={selected => submit(selected as OptionListItem[])}
-      value={listContext.state.searchQuery}
+      onSubmit={submit as (selected: OptionListItem[]) => void}
+      value={listContext.state.filterTerm}
     />
   );
 };

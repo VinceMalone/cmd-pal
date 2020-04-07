@@ -14,24 +14,15 @@ const BaseDialog = styled.div`
   left: 0;
   line-height: 1.25;
   margin: auto;
-  max-width: ${props => props.theme.maxWidth};
+  max-width: 600px;
   outline: none;
   padding: 0.5em 1em;
   position: fixed;
   right: 0;
-  top: ${props => props.theme.offsetTop};
-  width: calc(100% - ${props => props.theme.offsetSides});
-  z-index: ${props => props.theme.zIndex};
+  top: 2em;
+  width: calc(100% - 2em);
+  z-index: 1;
 `;
-
-BaseDialog.defaultProps = {
-  theme: {
-    maxWidth: '600px',
-    offsetSides: '2rem',
-    offsetTop: '2rem',
-    zIndex: 1,
-  },
-};
 
 type HtmlProps = React.HTMLAttributes<HTMLElement> &
   React.RefAttributes<HTMLElement>;

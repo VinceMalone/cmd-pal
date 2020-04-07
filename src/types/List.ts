@@ -15,11 +15,8 @@ export interface Item {
   label: string;
 }
 
-interface Searchable {
-  matches: Match[];
-}
-
-export interface ListItem extends Item, Searchable {
+export interface ListItem extends Item {
   id: string;
+  matches: Match[];
   ordinal: number;
 }

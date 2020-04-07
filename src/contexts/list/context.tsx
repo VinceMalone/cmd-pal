@@ -1,10 +1,12 @@
 import * as React from 'react';
 
 import { useExperiments } from '../../components/Experiments';
-import { Item, ListItem } from '../../types/List';
+import { OptionBag } from '../../types/Option';
 import { filterItemsCDT, filterItemsVSC } from '../../utils/filterItems';
 
 import * as duck from './duck';
+
+type Option = OptionBag<unknown, unknown>;
 
 interface ListRef {
   itemHeight: number;
@@ -13,18 +15,16 @@ interface ListRef {
   scrollToItem?(index: number): void;
 }
 
-interface ListContextValue<T extends ListItem = ListItem> {
+interface ListContextValue {
   dispatch: React.Dispatch<duck.Actions>;
   ref: React.MutableRefObject<ListRef>;
-  state: duck.State<T>;
+  state: duck.State<Option>;
 }
 
 export const ListContext = React.createContext<ListContextValue | null>(null);
 
-export const useListContext = <T extends ListItem = ListItem>() => {
-  const context = React.useContext(
-    (ListContext as unknown) as React.Context<ListContextValue<T>>,
-  );
+export const useListContext = () => {
+  const context = React.useContext(ListContext);
   if (context === null) {
     throw new Error('useListContext must be used inside a ListProvider');
   }
@@ -33,26 +33,29 @@ export const useListContext = <T extends ListItem = ListItem>() => {
 
 export interface ListProviderProps {
   children?: React.ReactNode;
-  items: readonly Item[];
-  searchQuery?: string;
+  initialfilterTerm?: string;
+  options: readonly Option[];
 }
 
 export const ListProvider: React.FC<ListProviderProps> = ({
   children,
-  items,
-  searchQuery = '',
+  initialfilterTerm = '',
+  options,
 }) => {
   const { experiment } = useExperiments();
   const filterStrategy = experiment('FILTER_ALGORITHM', 'CDT')
     ? filterItemsCDT
     : filterItemsVSC;
 
-  const [state, dispatch] = React.useReducer(
+  const [state, dispatch] = React.useReducer<
+    React.Reducer<duck.State<Option>, duck.Actions>,
+    duck.InitProps<Option>
+  >(
     duck.reducer,
     {
       filterStrategy,
-      items,
-      searchQuery,
+      initialfilterTerm,
+      items: options,
     },
     duck.init,
   );

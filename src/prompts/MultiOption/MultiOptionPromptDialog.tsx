@@ -29,8 +29,6 @@ const DialogReady: React.FC<BaseDialogProps> = props => {
   const dialogRef = React.useRef<HTMLElement>(null);
 
   const handleClick = React.useCallback(() => {
-    // TODO
-    // dialogRef.current?.querySelector('input')?.focus();
     dispatch(unfocus());
   }, [dispatch]);
 

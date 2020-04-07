@@ -8,8 +8,8 @@ import { Measure } from '../Measure';
 import { VirtualItems } from '../VirtualItems';
 
 interface OptionListComponentProps {
-  'aria-activedescendant': string | undefined;
-  role: string;
+  'aria-activedescendant'?: string;
+  role?: string;
 }
 
 export type OptionListComponent = React.ElementType<OptionListComponentProps>;
@@ -35,7 +35,7 @@ export const OptionList: React.FC<OptionListProps> = ({
 }) => {
   const OptionListComponent = useComponent('OptionList', as, 'div');
 
-  const { dispatch, ref, state } = useListContext<OptionListItem>();
+  const { dispatch, ref, state } = useListContext();
   const { focusedIndex } = state;
 
   React.useLayoutEffect(() => {
