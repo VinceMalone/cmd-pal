@@ -1,14 +1,12 @@
 import * as React from 'react';
 
 import { Components } from '../src/contexts/components/type';
-import * as namely from '../themes/namely';
-import * as vscode from '../themes/vscode';
+import * as classic from '../themes/classic';
 import * as win95 from '../themes/win95';
 
 export const themes: Record<string, Partial<Components>> = {
   none: {},
-  namely: namely.components,
-  vscode: vscode.components,
+  classic: classic.components,
   win95: win95.components,
 };
 
@@ -25,7 +23,7 @@ export const useTheme = (): [string, Partial<Components>] => {
 };
 
 export const ThemeProvider: React.FC = ({ children }) => {
-  const [theme, setTheme] = React.useState<keyof typeof themes>('vscode');
+  const [theme, setTheme] = React.useState<keyof typeof themes>('classic');
 
   return (
     <ThemeContext.Provider value={[theme, setTheme]}>

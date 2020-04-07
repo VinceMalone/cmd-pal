@@ -8,7 +8,7 @@ import '../../../src/prompts/SingleOption';
 import '../../../src/prompts/Text';
 
 import listings from '../../../data/netflix_titles.json';
-import * as vscode from '../../../themes/vscode';
+import * as classic from '../../../themes/classic';
 import { ComponentsProvider } from '../../contexts/components';
 
 import { MultiOption } from './MultiOption';
@@ -46,7 +46,7 @@ TODO
 
 <Preview>
   <Story name="Themed">
-    <ComponentsProvider components={vscode.components}>
+    <ComponentsProvider components={classic.components}>
       <MultiOption
         message="Choose your favorite movies"
         options={listings

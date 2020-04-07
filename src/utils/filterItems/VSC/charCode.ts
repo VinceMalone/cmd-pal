@@ -1,9 +1,6 @@
-// Names from https://blog.codinghorror.com/ascii-pronunciation-rules-for-programmers/
+/* eslint-disable @typescript-eslint/camelcase */
 
-/**
- * An inlined enum containing useful character codes (to be used with String.charCodeAt).
- * Please leave the const keyword such that it gets inlined when compiled to JavaScript!
- */
+// Names from https://blog.codinghorror.com/ascii-pronunciation-rules-for-programmers/
 export const enum CharCode {
   Null = 0,
   /**
