@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { hot } from 'react-hot-loader/root';
 import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 
@@ -53,7 +54,7 @@ const Experiments = styled.aside`
   grid-area: experiments;
 `;
 
-export const App = () => {
+export const App = hot(() => {
   return (
     <BrowserRouter>
       <ThemeProvider>
@@ -133,4 +134,4 @@ export const App = () => {
       </ThemeProvider>
     </BrowserRouter>
   );
-};
+});

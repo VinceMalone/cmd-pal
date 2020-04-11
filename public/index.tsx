@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/order
+import 'react-hot-loader';
+
 import * as React from 'react';
 import { render } from 'react-dom';
 

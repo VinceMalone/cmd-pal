@@ -13,6 +13,9 @@ module.exports = {
     historyApiFallback: true,
   },
   resolve: {
+    alias: {
+      'react-dom': '@hot-loader/react-dom',
+    },
     extensions: ['.js', '.ts', '.tsx'],
   },
   module: {
