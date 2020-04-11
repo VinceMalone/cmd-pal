@@ -2,11 +2,13 @@ import * as React from 'react';
 
 import { Components } from '../src/contexts/components/type';
 import * as classic from '../themes/classic';
+import * as matt from '../themes/matt';
 import * as win95 from '../themes/win95';
 
 export const themes: Record<string, Partial<Components>> = {
   none: {},
   classic: classic.components,
+  matt: matt.components,
   win95: win95.components,
 };
 

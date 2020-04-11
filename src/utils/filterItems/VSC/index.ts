@@ -7,6 +7,8 @@ import {
   or,
 } from './filters';
 
+// https://github.com/microsoft/vscode/blob/a4207f7759b378d4adc4cf0aac17d1c038122973/src/vs/platform/quickinput/browser/commandsQuickAccess.ts
+
 const WORD_FILTER = or(matchesPrefix, matchesWords, matchesContiguousSubString);
 
 export const filterItemsVSC = <T extends ListItem>(
