@@ -53,60 +53,84 @@ const Experiments = styled.aside`
   grid-area: experiments;
 `;
 
-export const App = () => (
-  <ThemeProvider>
-    <ExperimentsProvider>
-      <BrowserRouter>
-        <DocStyle />
-        <Page>
-          <Nav>
-            <NavList>
-              <li role="presentation">
-                <Link to="/confirm">Confirm Prompts</Link>
-              </li>
-              <li role="presentation">
-                <Link to="/list">List Prompts</Link>
-              </li>
-              <li role="presentation">
-                <Link to="/multi-option">Multi-Option Prompts</Link>
-              </li>
-              <li role="presentation">
-                <Link to="/single-option">Single-Option Prompts</Link>
-              </li>
-              <li role="presentation">
-                <Link to="/text">Text Prompts</Link>
-              </li>
-            </NavList>
-          </Nav>
-          <Theme>
-            <label>
-              Theme <ThemeControl />
-            </label>
-          </Theme>
-          <Main>
-            <Switch>
-              <Route path="/confirm">
-                <P.ConfirmPrompts />
-              </Route>
-              <Route path="/list">
-                <P.ListPrompts />
-              </Route>
-              <Route path="/multi-option">
-                <P.MultiOptionPrompts />
-              </Route>
-              <Route path="/single-option">
-                <P.SingleOptionPrompts />
-              </Route>
-              <Route path="/text">
-                <P.TextPrompts />
-              </Route>
-            </Switch>
-          </Main>
-          <Experiments>
-            <ExperimentSettings />
-          </Experiments>
-        </Page>
-      </BrowserRouter>
-    </ExperimentsProvider>
-  </ThemeProvider>
-);
+export const App = () => {
+  return (
+    <BrowserRouter>
+      <ThemeProvider>
+        <ExperimentsProvider>
+          <DocStyle />
+          <Page>
+            <Nav>
+              <NavList>
+                <li role="presentation">
+                  <Link
+                    to={location => ({ ...location, pathname: '/confirm' })}
+                  >
+                    Confirm Prompts
+                  </Link>
+                </li>
+                <li role="presentation">
+                  <Link to={location => ({ ...location, pathname: '/list' })}>
+                    List Prompts
+                  </Link>
+                </li>
+                <li role="presentation">
+                  <Link
+                    to={location => ({
+                      ...location,
+                      pathname: '/multi-option',
+                    })}
+                  >
+                    Multi-Option Prompts
+                  </Link>
+                </li>
+                <li role="presentation">
+                  <Link
+                    to={location => ({
+                      ...location,
+                      pathname: '/single-option',
+                    })}
+                  >
+                    Single-Option Prompts
+                  </Link>
+                </li>
+                <li role="presentation">
+                  <Link to={location => ({ ...location, pathname: '/text' })}>
+                    Text Prompts
+                  </Link>
+                </li>
+              </NavList>
+            </Nav>
+            <Theme>
+              <label>
+                Theme <ThemeControl />
+              </label>
+            </Theme>
+            <Main>
+              <Switch>
+                <Route path="/confirm">
+                  <P.ConfirmPrompts />
+                </Route>
+                <Route path="/list">
+                  <P.ListPrompts />
+                </Route>
+                <Route path="/multi-option">
+                  <P.MultiOptionPrompts />
+                </Route>
+                <Route path="/single-option">
+                  <P.SingleOptionPrompts />
+                </Route>
+                <Route path="/text">
+                  <P.TextPrompts />
+                </Route>
+              </Switch>
+            </Main>
+            <Experiments>
+              <ExperimentSettings />
+            </Experiments>
+          </Page>
+        </ExperimentsProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  );
+};
