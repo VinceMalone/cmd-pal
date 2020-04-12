@@ -4,13 +4,13 @@ import { useEffectOnce } from 'react-use';
 
 import { Components } from '../src/contexts/components/type';
 import * as classic from '../themes/classic';
-import * as matt from '../themes/matt';
+import * as neon from '../themes/neon';
 import * as win95 from '../themes/win95';
 
 export const themes: Record<string, Partial<Components>> = {
   none: {},
   classic: classic.components,
-  matt: matt.components,
+  neon: neon.components,
   win95: win95.components,
 };
 
