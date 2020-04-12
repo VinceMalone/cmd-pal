@@ -74,35 +74,39 @@ export const OptionList: React.FC<OptionListProps> = ({
   }
 
   return (
-    <Measure
-      element={children({
-        focused: false,
-        item: {
-          id: '',
-          label: 'Label',
-          matches: [],
-          ordinal: -1,
-          resolve: null,
-        },
-        onSelect: () => undefined,
-      })}
-    >
-      {({ height }) => (
-        <OptionListComponent
-          aria-activedescendant={activeDescendant}
-          role="tree"
-        >
-          <VirtualItems itemCount={items.length} itemHeight={height} ref={ref}>
-            {({ index }) =>
-              children({
-                focused: index === focusedIndex,
-                item: items[index],
-                onSelect: handleSelect,
-              })
-            }
-          </VirtualItems>
-        </OptionListComponent>
-      )}
-    </Measure>
+    <OptionListComponent aria-activedescendant={activeDescendant} role="tree">
+      <Measure
+        element={children({
+          focused: false,
+          item: {
+            id: '',
+            label: 'Label',
+            matches: [],
+            ordinal: -1,
+            resolve: null,
+          },
+          onSelect: () => undefined,
+        })}
+      >
+        {({ height }) => (
+          // VirtualItems needs an unstyled element to measure
+          <div>
+            <VirtualItems
+              itemCount={items.length}
+              itemHeight={height}
+              ref={ref}
+            >
+              {({ index }) =>
+                children({
+                  focused: index === focusedIndex,
+                  item: items[index],
+                  onSelect: handleSelect,
+                })
+              }
+            </VirtualItems>
+          </div>
+        )}
+      </Measure>
+    </OptionListComponent>
   );
 };
