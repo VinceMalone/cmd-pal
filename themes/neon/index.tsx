@@ -1,6 +1,8 @@
 import styled, { css } from 'styled-components';
 
-export const components = {
+import { Components } from '../../src/contexts/components/type';
+
+export const components: Partial<Components> = {
   Dialog: styled.div`
     --primary: rgb(15, 124, 179);
     --primary-translucent: rgba(15, 124, 179, 0.25);
