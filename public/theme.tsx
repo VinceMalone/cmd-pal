@@ -3,12 +3,14 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useEffectOnce } from 'react-use';
 
 import { Components } from '../src/contexts/components/type';
+import * as candy from '../themes/candy';
 import * as classic from '../themes/classic';
 import * as neon from '../themes/neon';
 import * as win95 from '../themes/win95';
 
 export const themes: Record<string, Partial<Components>> = {
   none: {},
+  candy: candy.components,
   classic: classic.components,
   neon: neon.components,
   win95: win95.components,
